@@ -1,0 +1,17 @@
+atkinson                Atkinson's inequality index
+clean.income            Utility functions
+eqscale                 Transform an incdist object with an
+                        equivalence scale
+fgt                     The Foster Greer Thorbecke poverty index
+fields                  Fields mobility index
+ge                      Generalized entropy inequality index
+gini                    Generalized gini or concentration coefficient
+hasse                   A Hasse doagram of an inequalioty or poverty ordering
+incdist                 An income distribution object
+kolm                    Kolm's inequality index
+lorenz                  Estimate a generalized lorenz curve
+plot.lorenz             Plot a Lorenz curve
+plot.tip                Plot a TIP or CPG curve
+prospect                Prospect theory welfare index
+tip                     The "three I's of poverty" (TIP) or "Cumulated
+                        Poverty Gap" (CGP) curve
