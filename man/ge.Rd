@@ -8,8 +8,15 @@
 \alias{cv2}
 \title{Generalized entropy inequality index}
 \usage{
-ge(x, w = rep(1, length(x)), eta = 2, data = NULL, ranked = x,
-  na.rm = TRUE, ...)
+ge(
+  x,
+  w = rep(1, length(x)),
+  eta = 2,
+  data = NULL,
+  ranked = x,
+  na.rm = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a numerical vector whose index is to be estimated}
@@ -41,9 +48,7 @@ ge(runif(100), eta = 2)
 
 }
 \references{
-Lambert, P. (1993).  \emph{The distribution and redistribution
-of income. A mathematical analysis.} Manchester University Press,
-Manchester.
+\insertRef{lambert1993}{incdist}
 }
 \seealso{
 \code{\link{gini}} \code{\link{atkinson}}

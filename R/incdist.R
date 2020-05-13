@@ -1,3 +1,4 @@
+## test to see if both make it to NAMESPACE
 # income -- R functions for income distribution analysis
 # v 0.1 1998/01/07 mjantti@abo.fi
 # Goals:
@@ -15,8 +16,6 @@
 ## v. 0.3 2012-12-03 markus.jantti@sofi.su.se
 
 ### an income distribution object
-
-
 
 
 #' An income distribution object
@@ -49,6 +48,8 @@
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso
 #' @references
+#' \insertRef{lambert1993}{incdist}
+#'
 #' @examples
 #'
 #' ## generate some data
@@ -81,17 +82,20 @@
 #' print(summary(id.0, equivalise = TRUE), all = TRUE) # the default
 #' print(id.0)
 #' ## there is not such function: plot(id.0)
+#' @importFrom stats approxfun as.formula complete.cases cov.wt formula is.empty.model
+#' model.extract model.weights na.omit predict terms var weighted.mean
 #'
+
 
 ## the formula method, currently only this exists
 ## will this need to be modified
-#' @export incdist
+#' @export
 incdist <- function(x, ...)
 {
   if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("incdist", x)
 }
-#' @export incdist.formula
+#' @export
 incdist.formula <-
   function(formula, weights, data = sys.frame(sys.parent()), subset,
            eqscale = NULL,
@@ -190,11 +194,11 @@ print.incdist <- function(object, ...)
 ## NB: problem with Gini coefficient use
 summary.incdist <- function(object,
                             equivalise = FALSE,
-                            func = c("weighted.mean", "weighted.std",
+                            func = c("weighted_mean", "weighted_std",
                               "gini.default", "concentration.coef"),
                             poverty=FALSE, concentration = !poverty,
                             povertyline=NULL,
-                            povertyline.function="weighted.median",
+                            povertyline.function="weighted_median",
                             povertyline.fraction=0.5,
                             frame=TRUE, ...)
   {
@@ -602,6 +606,7 @@ incdist.as.array <- function(object, ...)
   }
 
 ## the predicate function
+
 is.incdist <- function(object) inherits(object, "incdist")
 
 #' Transform an incdist object with an equivalence scale
@@ -646,7 +651,7 @@ is.incdist <- function(object) inherits(object, "incdist")
 #'
 #' eqscale(id.0)
 #'
-#' @export eqscale
+#' @export
 
 eqscale <- function(object)
   {
@@ -687,12 +692,31 @@ eqscale <- function(object)
 
 ## functions that "bind" to income distribution functionals
 ## an inequality index
+#'
+#' Estimate inequality indices
+#'
+#' This function estimates inequality indices.
+#'
+#'
+#' @aliases inequality inequality.incdist inequality.default
+#' @param x a numerical vector or incdist object
+#' @param w an optional vector of non-negative integer values weights.
+#' @param indices to estimate
+#' @return the estimated indices
+#' @author Markus Jantti \email{markus.jantti@@iki.fi}
+#' @seealso \code{\link{gini}}, \code{\link{ge}}, \code{\link{atkinson}}
+#' @references Lambert, P. (1993).  \emph{The distribution and
+#'     redistribution of income. A mathematical analysis.} Manchester
+#'     University Press, Manchester.
+
+#' @export
+
 inequality <- function(x, ...)
 {
   if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("inequality", x)
 }
-
+#' @export
 inequality.default <- function(x, type = c("gini", "ge", "atkinson", "cv2"), ...)
 {
   if(!is.numeric(x)) stop("argument x is non-numeric!")
@@ -702,29 +726,48 @@ inequality.default <- function(x, type = c("gini", "ge", "atkinson", "cv2"), ...
   for(i in type) ret[i] <- do.call(i, c(list(x), args))
   ret
 }
-
+#' @export
 inequality.incdist <-
-  function(object, what = 1, type = c("gini", "ge", "atkinson", "cv2"),
+  function(x, what = 1, type = c("gini", "ge", "atkinson", "cv2"),
            frame=FALSE,
            equivalise=FALSE, ...)
 {
-  if(!is.incdist(object)) stop("Not an incdist object!")
-  ## for what
-  ## what to calculate  (change this so multiple measures can be used.)
-  ## type <- match.arg(type)
-  obj <- summary(object, func = type, frame=frame, equivalise=equivalise,...)
-  ##print(obj, all = TRUE)
-  obj[[what]][[1]]
+    object <- x
+    if(!is.incdist(object)) stop("Not an incdist object!")
+    ## for what
+    ## what to calculate  (change this so multiple measures can be used.)
+    ## type <- match.arg(type)
+    obj <- summary(object, func = type, frame=frame, equivalise=equivalise,...)
+    ##print(obj, all = TRUE)
+    obj[[what]][[1]]
 }
 
 
 ## a poverty index
+#'
+#' Estimate poverty indices
+#'
+#' This function estimates poverty indices.
+#'
+#'
+#' @aliases povery poverty.incdist poverty.default
+#' @param x a numerical vector or incdist object
+#' @param w an optional vector of non-negative integer values weights.
+#' @param indices to estimate
+#' @return the estimated indices
+#' @author Markus Jantti \email{markus.jantti@@iki.fi}
+#' @seealso \code{\link{inequality}}, \code{\link{fgt}}
+#' @references Lambert, P. (1993).  \emph{The distribution and
+#'     redistribution of income. A mathematical analysis.} Manchester
+#'     University Press, Manchester.
+#' @export
 poverty <- function(x, ...)
 {
   if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("poverty", x)
 }
 
+#' @export
 poverty.default <- function(x, type = "fgt", ...)
 {
   if(!is.numeric(x)) stop("argument x is non-numeric!")
@@ -735,9 +778,11 @@ poverty.default <- function(x, type = "fgt", ...)
   ret
 }
 
+#' @export
 poverty.incdist <-
-  function(object, what = 1, type = "fgt", frame=FALSE, ...)
+  function(x, what = 1, type = "fgt", frame=FALSE, ...)
 {
+    object <- x
   if(!is.incdist(object)) stop("Not an incdist object!")
   ## for what
   ## what to calculate

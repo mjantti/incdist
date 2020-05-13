@@ -26,7 +26,10 @@ This function estimates the Fields income mobility index.
 
 }
 \references{
-Cite some suitable paper by Fields.
+\insertRef{fieldsandok1999}{incdist}
+}
+\seealso{
+
 }
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}

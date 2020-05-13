@@ -14,7 +14,9 @@
 #' @return A scalar.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso
-#' @references Cite some suitable paper by Fields.
+#' @references
+#' \insertRef{fieldsandok1999}{incdist}
+#'
 #' @examples
 #'
 #'
@@ -23,12 +25,12 @@ fields <- function(x, w = rep(1,dim(x)[1]), data = list(), na.rm=TRUE) {
   # missing etc treatment
   n <- dim(x)[1]
   k <- dim(x)[2]
-  incmat <- clean.income(x, w)
+  incmat <- clean_income(x, w)
   x <- incmat[,-(k+1)]
   w <- incmat[,(k+1)]
   ## this must be wrong
   diff.xy <- abs(log(x[,1]) - log(x[,k]))
-  retval <- weighted.mean(diff.xy, w)
+  retval <- weighted_mean(diff.xy, w)
   retval
 }
 
@@ -47,7 +49,9 @@ fields <- function(x, w = rep(1,dim(x)[1]), data = list(), na.rm=TRUE) {
 #' @return A scalar.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso
-#' @references Cite Shorrocks's Econometrica paper
+#' @references
+#' \insertRef{shorrocks1978jet}{incdist}
+#'
 #' @examples
 #'
 #'
@@ -67,17 +71,17 @@ shorrocks <- function(x, w = rep(1,dim(x)[1]),
     n <- dim(x)[1]
     k <- dim(x)[2]
     if(!k>1) stop("x has only one column!")
-    incmat <- clean.income(x, w, na.rm = na.rm)
+    incmat <- clean_income(x, w, na.rm = na.rm)
     #XXX:  <- incmat[,-(k+1)]
     w <- incmat[,(k+1)]
     x.bar <- apply(x, 1, mean)
     ## check if weights are probs or unit correspondences
     ## not implemented and not really needed now.
     index.x <- apply(x, 2, function(y) do.call(index, list(y, w, ...)))
-    mean.#XXX:  <- apply(x, 2, function(y) weighted.mean(y, w))
+    mean.#XXX:  <- apply(x, 2, function(y) weighted_mean(y, w))
     ## x.bar
     index.xbar <- do.call(index, list(x.bar, w, ...))
-    mean.xbar <- weighted.mean(x.bar, w)
+    mean.xbar <- weighted_mean(x.bar, w)
     ## and for m
     m <- 1 - index.xbar/sum(mean.x/mean.xbar*index.x)
     ## if(!is.null(data) & is.data.frame(data))
@@ -99,7 +103,7 @@ shorrocks <- function(x, w = rep(1,dim(x)[1]),
 #'
 #' This function a mobility matrix for two-dimensional data.
 #'
-#' @aliases mtr mdet ml mf mb mmtr mmdet mml mmf nnb
+#' @aliases mob_mat mtr mdet ml mf mb mmtr mmdet mml mmf nnb
 #'
 #' @param x1 A vector of income data
 #' @param x2 A vector of income data
@@ -116,10 +120,11 @@ shorrocks <- function(x, w = rep(1,dim(x)[1]),
 #' @references Cite something suitable. (EDIT)
 #' @examples
 #'
+#' @importFrom Hmisc wtd.table
 #'
-#' @export mob.mat
+#' @export mob_mat
 
-mob.mat <-
+mob_mat <-
   function(x1, x2, w, Q1 = NULL, Q2 = NULL, q = 5, labels = FALSE)
 {
   n01 <- length(x1)
@@ -133,15 +138,15 @@ mob.mat <-
                !is.nan(x1) & !is.nan(x2) & !is.nan(w) &
                is.finite(x1) & is.finite(x2) & is.finite(w) &
                !is.na(x2) & !is.na(x2) & !is.na(w))
-  if(missing(Q1)) Q1 <- weighted.quantile(df$x1, df$w, 0:q/q)
+  if(missing(Q1)) Q1 <- weighted_quantile(df$x1, df$w, 0:q/q)
   X1 <- cut(df$x1, Q1, include.lowest=TRUE, right = FALSE, labels = labels)
-  if(missing(Q2)) Q2 <- weighted.quantile(df$x2, df$w, 0:q/q)
+  if(missing(Q2)) Q2 <- weighted_quantile(df$x2, df$w, 0:q/q)
   X2 <- cut(df$x2, Q2, include.lowest=TRUE, right = FALSE, labels = labels)
   n1 <- wtd.table(X1, df$w, type = 'table')
   n2 <- wtd.table(X2, df$w, type = 'table')
   n <- dim(df)[1]
   ## how should this be done in a weighted way?
-  m <- weighted.crosstable(X1,X2,df$w)
+  m <- weighted_crosstable(X1,X2,df$w)
   rm <- m/sum(n1)
   p <- m/rep(n1,nrow(m))
   p1 <- n1/sum(n1)

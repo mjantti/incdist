@@ -2,7 +2,7 @@
 % Please edit documentation in R/decomp.R
 \name{decomp_groups}
 \alias{decomp_groups}
-\title{Decomposition of inequautlit index by population subgroups}
+\title{Decomposition of inequality index by population subgroups}
 \usage{
 decomp_groups(
   x,

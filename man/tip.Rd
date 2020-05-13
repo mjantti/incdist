@@ -4,11 +4,13 @@
 \alias{tip}
 \alias{tip.default}
 \alias{cpg}
-\alias{is.tip}
+\alias{tip.locfit}
+\alias{tip.incdist}
+\alias{is.}
 \alias{summary.tip}
 \alias{print.summary.tip}
 \alias{dominates.tip}
-\alias{dominates.tiplist}
+\alias{dominates.tip_list}
 \title{The "three I's of poverty" (TIP) or "Cumulated Poverty Gap" (CGP) curve}
 \usage{
 tip(x, ...)
@@ -72,9 +74,7 @@ plot(tip.ex, lwd = 2)
 
 }
 \references{
-Jenkins, Stephen P & Peter J Lambert ( 1997), `Three `i's of
-poverty curves, with an analysis of U.K. poverty trends', Oxford Economic
-Papers 49(3), 317-327.
+\insertRef{jenkinsandlamber1997}{incdist}
 }
 \seealso{
 \code{\link{lorenz}}, \code{\link{fgt}}

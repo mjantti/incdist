@@ -4,10 +4,17 @@
 \alias{fgt}
 \title{The Foster Greer Thorbecke poverty index}
 \usage{
-fgt(x, w = rep(1, length(x)), alpha = 0, mean = FALSE,
-  fraction = 0.5, z = ifelse(mean, fraction * weighted.mean(x, w),
-  fraction * weighted.median(x, w)), data = NULL, ranked = NULL,
-  na.rm = TRUE)
+fgt(
+  x,
+  w = rep(1, length(x)),
+  alpha = 0,
+  mean = FALSE,
+  fraction = 0.5,
+  z = ifelse(mean, fraction * weighted_mean(x, w), fraction * weighted_median(x, w)),
+  data = NULL,
+  ranked = NULL,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{x}{the resource variable}
@@ -58,6 +65,12 @@ weight <- rpois(n,7)
 fgt(income, weight)
 sapply(seq(.3, .6, by = .1), function(x) fgt(income, weight, fraction = x)$fgt)
 
+}
+\references{
+\insertRef{fostergreerandthorbecke1984}{incdist}
+}
+\seealso{
+\code{\link{poverty}}
 }
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}

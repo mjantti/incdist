@@ -32,8 +32,10 @@
 #' @return A list with elements \item{fgt}{the index value} \item{n}{sample
 #' size} \item{z}{poverty line} \item{sumq}{sum of weights}
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso
+#' @seealso \code{\link{poverty}}
 #' @references
+#' \insertRef{fostergreerandthorbecke1984}{incdist}
+#'
 #' @examples
 #'
 #' fgt(runif(100))
@@ -43,12 +45,12 @@
 #' fgt(income, weight)
 #' sapply(seq(.3, .6, by = .1), function(x) fgt(income, weight, fraction = x)$fgt)
 #'
-#' @export fgt
+#' @export
 fgt <-
   function (x, w = rep(1, length(x)), alpha = 0,
             mean = FALSE, fraction = 0.5,
-            z = ifelse(mean, fraction * weighted.mean(x, w),
-              fraction * weighted.median(x, w)),
+            z = ifelse(mean, fraction * weighted_mean(x, w),
+              fraction * weighted_median(x, w)),
             data = NULL,
             ranked = NULL,
             na.rm = TRUE)
@@ -62,19 +64,19 @@ fgt <-
   if (fraction < 0 || fraction > 1)
     stop("Fraction outside unit interval!")
   # moved treatment of NA's, missing values and others to utility function
-  # "clean.income"
-  incmat <- clean.income(x, w)
+  # "clean_income"
+  incmat <- clean_income(x, w)
   x <- incmat[, 1]
   w <- incmat[, 2]
   retval <- list()
 #  if (missing(z))
 #  {
 #    if (mean)
-#      z <- fraction * weighted.mean(x, w)
+#      z <- fraction * weighted_mean(x, w)
 #    else
-#      z <- fraction * weighted.median(x, w)
+#      z <- fraction * weighted_median(x, w)
 #  }
-  fgt <- weighted.mean((x < z) * (1 - x/z)^alpha, w)
+  fgt <- weighted_mean((x < z) * (1 - x/z)^alpha, w)
   retval$fgt <- fgt
   retval$n <- length(x)
 #  if(length(z) != 1) warning("Poverty line is a vector.")

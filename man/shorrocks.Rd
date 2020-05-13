@@ -4,8 +4,14 @@
 \alias{shorrocks}
 \title{Shorrocks mobility index}
 \usage{
-shorrocks(x, w = rep(1, dim(x)[1]), data = NULL, na.rm = TRUE,
-  index = "gini", ...)
+shorrocks(
+  x,
+  w = rep(1, dim(x)[1]),
+  data = NULL,
+  na.rm = TRUE,
+  index = "gini",
+  ...
+)
 }
 \arguments{
 \item{x}{A matrix with income data}
@@ -30,7 +36,10 @@ inequality indext
 
 }
 \references{
-Cite Shorrocks's Econometrica paper
+\insertRef{shorrocks1978jet}{incdist}
+}
+\seealso{
+
 }
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}

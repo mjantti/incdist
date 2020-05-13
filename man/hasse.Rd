@@ -28,12 +28,15 @@ the Lorenz curve comparisons.
 }
 \examples{
 
-require(relations)
-lor.1 <- lorenz(runif(100))
-lor.2 <- lorenz(rexp(100))
-hasse(list("1"=lor.1, "2"=lor.2))
+lor.1 <- lorenz(rep(c(1, 2, 3, 4, 5), each=20))
+lor.2 <- lorenz(rep(c(1, 1, 3, 4, 6), each=20))
+lor.3 <- lorenz(rep(c(1.5, 2, 3, 4, 5.5), each=20))
+hasse(list("a"=lor.1, "b"=lor.2, "c"=lor.3))
 
 
+}
+\references{
+\insertRef{atkinsonsmeedingandrainwater1995}{incdist}
 }
 \seealso{
 \code{\link{lorenz}}, \code{\link{tip}}.

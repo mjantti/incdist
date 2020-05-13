@@ -81,6 +81,11 @@ print(summary(id.0, equivalise = FALSE), all = TRUE)
 print(summary(id.0, equivalise = TRUE), all = TRUE) # the default
 print(id.0)
 ## there is not such function: plot(id.0)
+}
+\references{
+\insertRef{lambert1993}{incdist}
+}
+\seealso{
 
 }
 \author{

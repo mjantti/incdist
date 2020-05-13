@@ -61,7 +61,7 @@ is not false) the within-group incomes shares.}
 }
 \description{
 \code{lorenz}, \code{lorenz.default}, \code{lorenz.locfit} and
-\code{lorenz.incdist} compute a (possibly generalized) Lorenz curve. The
+\code{lorenz_incdist} compute a (possibly generalized) Lorenz curve. The
 default method assumes the data are vectors, the locfit method assumes that
 the function is applied to a locfit density object, and the incdist method
 assumes the object has been created by the incdist methods. The curve is
@@ -78,7 +78,7 @@ print and summary methods are provided, as well as coercion to data fame
 \code{dominates.lorenz} compares two lorenz curves and returns (1=x L
 dominates y, 0 = curves cross or are identical, -1 = y L dominates x).
 
-\code{dominates.lorenzlist} takes a list of lorenz curves and computes an
+\code{dominates.lorenz_list} takes a list of lorenz curves and computes an
 upper triangular matrix with elements dominates.lorenz(row, column)
 
 The function computes an ordinary lorenz curve. The summary and plot methods
@@ -114,32 +114,27 @@ lor.1 <- lorenz(runif(100))
 lor.2 <- lorenz(rexp(100))
 lor.3 <- lorenz(rexp(100), cov = TRUE)
 
-plot.lorenz.list(list("1"=lor.1, "2"=lor.2))
+plot.lorenz_list(list("1"=lor.1, "2"=lor.2))
 dominates.lorenz(lor.1, lor.2)
-dominates.lorenz.list(list("1"=lor.1, "2"=lor.2))
+dominates.lorenz_list(list("1"=lor.1, "2"=lor.2))
 library(locfit)
 x <- runif(500)
 y <- rexp(500)
 lf.1 <- lorenz(locfit(~ x))
 lf.2 <- lorenz(locfit(~ y))
 dominates.lorenz(lor.1, lor.2)
-dominates.lorenz.list(list("1"=lor.1, "2"=lor.2))
-plot.lorenz.list(list("1"=lor.1, "2"=lor.2))
+dominates.lorenz_list(list("1"=lor.1, "2"=lor.2))
+plot.lorenz_list(list("1"=lor.1, "2"=lor.2))
 
 
 }
 \references{
-Lambert, P. (1993).  \emph{The distribution and redistribution
-of income. A mathematical analysis.} Manchester University Press,
-Manchester.  Beach C.M and Davidson, R. (1983). ``Distribution-Free
-Statistical Inference with Lorenz Curves and Income Shares''.  \emph{Review
-of Economics Studies} 50 (4), 728-735.  Beach C.M and Kaliski, S.F. (1986).
-``Lorenz Curve Inference with Sample Weights: An Application to the
-Distribution of Unemployment Exeperience''. \emph{Applied Statistics} 35(1),
-38-45.
+\insertRef{lambert1993}{incdist}
+\insertRef{beachanddavidson1983a}{incdist}
+\insertRef{beachandkaliski1986}{incdist}
 }
 \seealso{
-\code{\link{weighted.mean}}, \code{\link{tip}},
+\code{\link{weighted_mean}}, \code{\link{tip}},
 \code{\link{locfit}}
 }
 \author{

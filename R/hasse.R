@@ -14,18 +14,21 @@
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{lorenz}}, \code{\link{tip}}.
 #' @references
+#'
+#' \insertRef{atkinsonsmeedingandrainwater1995}{incdist}
+#'
 #' @examples
 #'
-#' require(relations)
-#' lor.1 <- lorenz(runif(100))
-#' lor.2 <- lorenz(rexp(100))
-#' hasse(list("1"=lor.1, "2"=lor.2))
+#' lor.1 <- lorenz(rep(c(1, 2, 3, 4, 5), each=20))
+#' lor.2 <- lorenz(rep(c(1, 1, 3, 4, 6), each=20))
+#' lor.3 <- lorenz(rep(c(1.5, 2, 3, 4, 5.5), each=20))
+#' hasse(list("a"=lor.1, "b"=lor.2, "c"=lor.3))
 #'
 #'
+#' @importFrom relations relation
 #' @export hasse
 hasse <- function(object, above.p=.1, lor.type="ord", ...)
 {
-    require(sets)
     ## test if appropiate kind of object
     if(!is.list(object))
       stop("Object is not a list!")
@@ -34,10 +37,10 @@ hasse <- function(object, above.p=.1, lor.type="ord", ...)
     ## do either tip or lorenz
     if(is.lorenz(object[[1]]))
         ## lorenz
-        dmat <- t(dominates.lorenz.list(object, lor.type=lor.type, above.p=above.p, ...))
+        dmat <- t(dominates.lorenz_list(object, lor.type=lor.type, above.p=above.p, ...))
     else
         ## tip
-        dmat <- t(dominates.tip.list(object, above.p=above.p, ...))
+        dmat <- t(dominates.tip_list(object, above.p=above.p, ...))
     r <- relation(incidence=dmat)
     plot(r)
 }

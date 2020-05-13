@@ -1,7 +1,8 @@
+#'
 #' A generalized lorenz curve
 #'
 #' \code{lorenz}, \code{lorenz.default}, \code{lorenz.locfit} and
-#' \code{lorenz.incdist} compute a (possibly generalized) Lorenz curve. The
+#' \code{lorenz_incdist} compute a (possibly generalized) Lorenz curve. The
 #' default method assumes the data are vectors, the locfit method assumes that
 #' the function is applied to a locfit density object, and the incdist method
 #' assumes the object has been created by the incdist methods. The curve is
@@ -17,7 +18,7 @@
 #' \code{dominates.lorenz} compares two lorenz curves and returns (1=x L
 #' dominates y, 0 = curves cross or are identical, -1 = y L dominates x).
 #'
-#' \code{dominates.lorenzlist} takes a list of lorenz curves and computes an
+#' \code{dominates.lorenz_list} takes a list of lorenz curves and computes an
 #' upper triangular matrix with elements dominates.lorenz(row, column)
 #'
 #' The function computes an ordinary lorenz curve. The summary and plot methods
@@ -40,7 +41,7 @@
 #' curves concerns the comparison of two (or more) Lorenz curves, making it
 #' most often a two-sample problem.
 #'
-#' @aliases lorenz lorenz.default lorenz.locfit lorenz.incdist is.lorenz
+#' @aliases lorenz.default lorenz lorenz.locfit lorenz.incdist is.lorenz
 #' summary.lorenz print.summary.lorenz as.data.frame.lorenz dominates.lorenz
 #' dominates.lorenzlist variance.lorenz
 #' @param x a numerical vector whose Lorenz curve is to be estimated
@@ -72,16 +73,16 @@
 #' is not false) the within-group means.} \item{quintile.shares}{(if \eqn{q}{q}
 #' is not false) the within-group incomes shares.}
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso \code{\link{weighted.mean}}, \code{\link{tip}},
+#' @seealso \code{\link{weighted_mean}}, \code{\link{tip}},
 #' \code{\link{locfit}}
-#' @references Lambert, P. (1993).  \emph{The distribution and redistribution
-#' of income. A mathematical analysis.} Manchester University Press,
-#' Manchester.  Beach C.M and Davidson, R. (1983). ``Distribution-Free
-#' Statistical Inference with Lorenz Curves and Income Shares''.  \emph{Review
-#' of Economics Studies} 50 (4), 728-735.  Beach C.M and Kaliski, S.F. (1986).
-#' ``Lorenz Curve Inference with Sample Weights: An Application to the
-#' Distribution of Unemployment Exeperience''. \emph{Applied Statistics} 35(1),
-#' 38-45.
+#' @references
+#' \insertRef{lambert1993}{incdist}
+#' \insertRef{beachanddavidson1983a}{incdist}
+#' \insertRef{beachandkaliski1986}{incdist}
+#'
+#'
+#' @importFrom Rdpack reprompt
+#'
 #' @examples
 #'
 #' lorenz(runif(10), q = FALSE)
@@ -95,20 +96,20 @@
 #' lor.2 <- lorenz(rexp(100))
 #' lor.3 <- lorenz(rexp(100), cov = TRUE)
 #'
-#' plot.lorenz.list(list("1"=lor.1, "2"=lor.2))
+#' plot.lorenz_list(list("1"=lor.1, "2"=lor.2))
 #' dominates.lorenz(lor.1, lor.2)
-#' dominates.lorenz.list(list("1"=lor.1, "2"=lor.2))
+#' dominates.lorenz_list(list("1"=lor.1, "2"=lor.2))
 #' library(locfit)
 #' x <- runif(500)
 #' y <- rexp(500)
 #' lf.1 <- lorenz(locfit(~ x))
 #' lf.2 <- lorenz(locfit(~ y))
 #' dominates.lorenz(lor.1, lor.2)
-#' dominates.lorenz.list(list("1"=lor.1, "2"=lor.2))
-#' plot.lorenz.list(list("1"=lor.1, "2"=lor.2))
+#' dominates.lorenz_list(list("1"=lor.1, "2"=lor.2))
+#' plot.lorenz_list(list("1"=lor.1, "2"=lor.2))
 #'
 #'
-#' @export lorenz
+#' @export
 lorenz <- function(x, ...)
 {
   if(is.null(class(x))) class(x)  <- data.class(x)
@@ -121,7 +122,8 @@ lorenz <- function(x, ...)
 ## - locfit objects
 ## - incdist objects
 ## - ecdf objects
-#' @export lorenz.default
+
+#' @export
 lorenz.default <- function(x, w = rep(1,length(x)),
                            ranked = x,
                            q = 5,
@@ -142,24 +144,24 @@ lorenz.default <- function(x, w = rep(1,length(x)),
   ## this does not work. How should the argument to detach be given?
   ## on.exit(detach(as.name("data"), character.only=TRUE))
   ## moved treatment of NA's, missing values and others to utility function
-  ## "clean.income"
+  ## "clean_income"
   if (length(x) != length(ranked))
     warning("The ordering variable length is unequal to x!")
-  incmat <- clean.income(cbind(x, ranked), w, no.negatives, na.rm)
+  incmat <- clean_income(cbind(x, ranked), w, no.negatives, na.rm)
   x <- incmat[,1]
   ranked <- incmat[,2]
   w <- incmat[,3]
   n <- length(x)
   retval <- list()
-  mu <- weighted.mean(x,w)
-  sigma2 <- weighted.var(x, w)
+  mu <- weighted_mean(x,w)
+  sigma2 <- weighted_var(x, w)
   if (!q) { # the microdataversion
     ind <- order(ranked)
     x <- x[ind]
     w <- w[ind]
     wsum <- sum(w)
     p <- cumsum(w)/wsum
-    sx <- w %*% x
+    sx <- c(w %*% x)
     lorenz <- cumsum(w * x)/sx
     quantx <- NULL # needed later on
   }
@@ -169,7 +171,7 @@ lorenz.default <- function(x, w = rep(1,length(x)),
       warning("Few obs per class. You should probably reduce q!")
     ##h.quantx <- wtd.quantile(x, w, probs=seq(0,1,1/q), na.rm = na.rm)
     if(is.null(cutoffs))
-        quantx <- weighted.quantile(ranked, w, probs=seq(0,1,1/q), na.rm = na.rm,
+        quantx <- weighted_quantile(ranked, w, probs=seq(0,1,1/q), na.rm = na.rm,
                                     names = FALSE)
     else
         {
@@ -188,7 +190,7 @@ lorenz.default <- function(x, w = rep(1,length(x)),
     ## try not having the "as.vector"
     qmeanx <-
         tapply(seq(along=x),cutsx,
-               function(i, x1=x, w1=w)  weighted.mean(x1[i], w1[i]))
+               function(i, x1=x, w1=w)  weighted_mean(x1[i], w1[i]))
     nqmeanx <- dimnames(qmeanx)[[1]]
     qmeanx <- as.vector(qmeanx)
     qsumx <-
@@ -268,7 +270,7 @@ lorenz.default <- function(x, w = rep(1,length(x)),
       else
         {
           object <- structure(retval, class = "lorenz")
-          retval$variances <- var.lor(object)
+          retval$variances <- var_lor(object)
         }
 
     }
@@ -276,8 +278,8 @@ lorenz.default <- function(x, w = rep(1,length(x)),
   structure(retval, class = "lorenz")
 }
 ## lorenz for a locfit density object
-
-lorenz.locfit <- function(object, ...)
+#' @export
+lorenz.locfit <- function(x, ...)
 {
   if(!inherits(object, "locfit")) stop("Not a locfit object!")
   ## I want to generate the empirical CDF from the object
@@ -309,15 +311,14 @@ lorenz.locfit <- function(object, ...)
 
 
 ## the predicate function
-
-is.lorenz <- function(object) inherits(object, "lorenz")
+#' @export
+is.lorenz <- function(x, ...) inherits(x, "lorenz")
 
 
 ## summary and print methods
 
-
-summary.lorenz <- function(object, ...)
-  structure(object, class = c("summary.lorenz", class(object)))
+summary.lorenz <- function(x, ...)
+  structure(x, class = c("summary.lorenz", class(object)))
 
 print.summary.lorenz <- function(x, ...){
   q <- length(x$p)
@@ -344,7 +345,7 @@ print.lorenz <- function(x, ...)
     invisible(object)
   }
 ## an as.data.frame method
-
+#' @export
 as.data.frame.lorenz <- function(x, row.names, optional, ...)
   {
     object <- x
@@ -381,8 +382,8 @@ as.data.frame.lorenz <- function(x, row.names, optional, ...)
   }
 
 ## a function to convert a list of lorenz curves into a dataset
-#' @export as.data.frame.lorenz.list
-as.data.frame.lorenz.list <- function(x, row.names, optional, ...)
+#' @export
+as.data.frame.lorenz_list <- function(x, row.names, optional, ...)
   {
     obj <- x
     if(!is.list(obj))
@@ -401,9 +402,9 @@ as.data.frame.lorenz.list <- function(x, row.names, optional, ...)
 
 ## compare two lorenz curves
 
-#' @export dominates.lorenz
+#' @export
 dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
-                             above.p=FALSE)
+                             above.p=FALSE, ...)
   {
     if(!is.lorenz(x)||!is.lorenz(y)) stop("Not a Lorenz curve!")
     ## based on micro.data?
@@ -494,11 +495,12 @@ dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
       }
     ret
   }
-#' @export dominates.lorenz.list
-dominates.lorenz.list <-
-  function(object, symmetric=FALSE,
+#' @export
+dominates.lorenz_list <-
+  function(x, symmetric=FALSE,
            lor.type="ord", rep.num=TRUE, above.p=FALSE, ...)
-  {
+{
+    object <- x
     if(!is.list(object))
       stop("Object is not a list!")
     if(!all(sapply(object, is.lorenz)))
@@ -549,8 +551,9 @@ dominates.lorenz.list <-
 ## the variance using Beach and Davidson and Beach and Kaliski
 
 
-var.lor <- function(object, what = "lorenz")
-  {
+var_lor <- function(x, what = "lorenz", ...)
+{
+    object <- x
     if(!is.lorenz(object)) stop("Object is not a Lorenz curve!")
     mu <- object$mean
     sigma2 <- object$sigma2
@@ -629,11 +632,12 @@ var.lor <- function(object, what = "lorenz")
 
 
 ## lorenz curves for a incdist object
-#' @export lorenz.incdist
-lorenz.incdist <- function(object, q=5, equivalise = FALSE,
+#' @export
+lorenz.incdist <- function(x, q=5, equivalise = FALSE,
                            group.cutoffs=TRUE,
-                           concentration=TRUE)
-  {
+                           concentration=TRUE, ...)
+{
+    object <- x
     ## test if this is an incdist  object
     if (!inherits(object, "incdist")){
       stop("First argument must be the incdist object!")
@@ -813,14 +817,14 @@ lorenz.incdist <- function(object, q=5, equivalise = FALSE,
       } ## partitions (years, mostly, could be countries
     ## detach(object)
     ret <- list(ret.y, ret.x)
-    ## this may not work! Moreover, maybe lorenz.incdist is sufficient?
-    structure(ret, class = c("lorenz.incdist", "lorenz"))
+    ## this may not work! Moreover, maybe lorenz_incdist is sufficient?
+    structure(ret, class = c("lorenz_incdist", "lorenz"))
   }
 
 
 ## and an as.data.frame method
-#' @export as.data.frame.lorenz.incdist
-as.data.frame.lorenz.incdist <-
+#' @export
+as.data.frame.lorenz_incdist <-
     function(x, ...)
     {
         obj <- x
@@ -879,8 +883,9 @@ as.data.frame.lorenz.incdist <-
     }
 
 ## convert from a data.frame to a (single) lorenz curve
-#' @export as.lorenz
-as.lorenz <- function(df, namel=list(p="p", ordinates="ordinates"))
+#' @export
+
+as.lorenz <- function(df, namel=list(p="p", ordinates="ordinates"), ...)
 {
     q <- dim(df)[1]-1
     obj <- list(q=q,
@@ -891,7 +896,7 @@ as.lorenz <- function(df, namel=list(p="p", ordinates="ordinates"))
                  mean=NA,
                  n=NA,
                 sum.weights=NA)
-    stop()
+    ## stop()
     for(i in names(namel)) obj[[i]] <- df[[namel[[i]]]]
     structure(obj, class="lorenz")
 }

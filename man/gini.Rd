@@ -4,8 +4,8 @@
 \alias{gini}
 \alias{gini.default}
 \alias{gini.incdist}
-\alias{concentration}
-\alias{coefficient}
+\alias{concentration_coefficient}
+\alias{concentration.coefficient}
 \title{Generalized gini or concentration coefficient}
 \usage{
 gini(x, ...)
@@ -50,12 +50,10 @@ gini(runif(20), rpois(20, 5), eta = 2)
 
 }
 \references{
-Lambert, P. (1993).  \emph{The distribution and
-    redistribution of income. A mathematical analysis.} Manchester
-    University Press, Manchester.
+\insertRef{lambert1993}{incdist}
 }
 \seealso{
-\code{\link{ineq}}, \code{\link{incdist}}
+\code{\link{inequality}}, \code{\link{incdist}}, \code{\link{lorenz}}
 }
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}

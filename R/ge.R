@@ -22,9 +22,9 @@
 #' @return The inequality index.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{gini}} \code{\link{atkinson}}
-#' @references Lambert, P. (1993).  \emph{The distribution and redistribution
-#' of income. A mathematical analysis.} Manchester University Press,
-#' Manchester.
+#' @references
+#' \insertRef{lambert1993}{incdist}
+#'
 #' @examples
 #'
 #' ge(runif(100), eta = 2)
@@ -39,22 +39,22 @@ ge <- function(x, w = rep(1,length(x)), eta = 2,
           on.exit(detach(data))
       }
   # moved treatment of NA's, missing values and others to utility function
-  # "clean.income"
-  incmat <- clean.income(x, w)
+  # "clean_income"
+  incmat <- clean_income(x, w)
   x <- incmat[,1]
   w <- incmat[,2]
   if(eta == 1) {
     # check how this business works
-    Th <- x/weighted.mean(x,w)
+    Th <- x/weighted_mean(x,w)
     Th <- w %*% (x * log(Th))
     retval <- Th/(w %*% x)
   }
   else if (eta == 0){
-    retval <- log(weighted.mean(x,w)) - weighted.mean(log(x), w)
+    retval <- log(weighted_mean(x,w)) - weighted_mean(log(x), w)
   }
   else {
-   edei <- (x/weighted.mean(x,w))^eta
-   retval <- weighted.mean(edei - 1,w)/(eta * (eta - 1))
+   edei <- (x/weighted_mean(x,w))^eta
+   retval <- weighted_mean(edei - 1,w)/(eta * (eta - 1))
   }
   ## detach the data
   ## if(!is.null(data) & is.data.frame(data))

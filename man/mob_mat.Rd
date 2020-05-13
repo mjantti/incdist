@@ -43,7 +43,6 @@ This function a mobility matrix for two-dimensional data.
 }
 \examples{
 
-
 }
 \references{
 Cite something suitable. (EDIT)

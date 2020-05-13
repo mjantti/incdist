@@ -5,8 +5,15 @@
 \alias{ede}
 \title{Atkinson's inequality index}
 \usage{
-atkinson(x, w = rep(1, length(x)), eta = 1/2, data = NULL,
-  na.rm = TRUE, no.negatives = FALSE, ...)
+atkinson(
+  x,
+  w = rep(1, length(x)),
+  eta = 1/2,
+  data = NULL,
+  na.rm = TRUE,
+  no.negatives = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a numerical vector whose index is to be estimated}
@@ -39,9 +46,7 @@ atkinson(runif(100), eta = 1/2)
 
 }
 \references{
-Lambert, P. (1993).  \emph{The distribution and redistribution
-of income. A mathematical analysis.} Manchester University Press,
-Manchester.
+\insertRef{lambert1993}{incdist}
 }
 \seealso{
 \code{\link{gini}} \code{\link{ge}}

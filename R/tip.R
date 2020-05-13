@@ -19,8 +19,8 @@
 #'
 #' Simple summary, print and plot methods are provided.
 #'
-#' @aliases tip.default tip cpg is.tip summary.tip print.summary.tip
-#' dominates.tip dominates.tiplist
+#' @aliases tip.default tip cpg tip.locfit tip.incdist is.
+#' tip summary.tip print.summary.tip dominates.tip dominates.tip_list
 #' @param x the resource variable
 #' @param w the sampling weights
 #' @param q an integer or logical. If an integer, it is the number of equally
@@ -43,9 +43,10 @@
 #' line} \item{sum.weights}{the sum of weights}
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{lorenz}}, \code{\link{fgt}}
-#' @references Jenkins, Stephen P & Peter J Lambert ( 1997), `Three `i's of
-#' poverty curves, with an analysis of U.K. poverty trends', Oxford Economic
-#' Papers 49(3), 317-327.
+#' @references
+#'
+#' \insertRef{jenkinsandlamber1997}{incdist}
+#'
 #' @examples
 #'
 #' income <- rexp(100)
@@ -53,25 +54,25 @@
 #' tip.ex <- tip(income, weight, q = FALSE)
 #' plot(tip.ex, lwd = 2)
 #'
-#' @export tip
+#' @export
 tip <- function(x, ...)
   {
     UseMethod("tip", x)
   }
-#' @export cpg
+#' @export
 cpg <- function(x, ...)
   {
     tip(x, ...)
   }
-#' @export tip.default
+#' @export
 tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
                         alpha = 0,
                         fraction = 0.5,
                         normalize = TRUE,
                         mean = FALSE,
                         z = ifelse(mean,
-                          fraction*weighted.mean(x,w),
-                          fraction*weighted.median(x,w)),
+                          fraction*weighted_mean(x,w),
+                          fraction*weighted_median(x,w)),
                         na.rm = TRUE, ...)
 {
   ## attach a possible data frame. Remember to detach it!
@@ -81,8 +82,8 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
           on.exit(detach(data))
         }
   # moved treatment of NA's, missing values and others to utility function
-  # "clean.income"
-  incmat <- clean.income(x, w, na.rm)
+  # "clean_income"
+  incmat <- clean_income(x, w, na.rm)
   x <- incmat[,1]
   w <- incmat[,2]
   retval <- list()
@@ -106,7 +107,7 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
     if(2*q > length(x))
       warning("Few obs per class. You should probably reduce q!")
     ## this must be modified so it handles the case of non-unique quantiles
-    quantx <- weighted.quantile(x, w, probs=seq(0,1,1/q), names = FALSE)
+    quantx <- weighted_quantile(x, w, probs=seq(0,1,1/q), names = FALSE)
      ## need to add a check here that the cutoffs are unique!
     duplsx <- duplicated(quantx)
     cutsx <- cut(x, unique(quantx), labels = FALSE,, right = FALSE,
@@ -118,7 +119,7 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
       gap <- (z - x)*(x < z)
     qmeanx <-
       as.vector(tapply(seq(along=gap),cutsx,
-                       function(i, x1=gap, w1=w)  weighted.mean(x1[i], w1[i])))
+                       function(i, x1=gap, w1=w)  weighted_mean(x1[i], w1[i])))
     qsumx <-
       as.vector(tapply(seq(along=gap),cutsx,
                        function(i, x1=gap, w1=w) sum(x1[i] * w1[i])))
@@ -155,8 +156,8 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
   retval$ordinates <- tip
   retval$p <- p
   retval$q <- q
-  retval$hc <- weighted.mean((x < z), w)
-  retval$relgap <- weighted.mean(gap,w)
+  retval$hc <- weighted_mean((x < z), w)
+  retval$relgap <- weighted_mean(gap,w)
   retval$z <- z
   retval$n <- length(x)
   retval$sum.weights <- sum(w)
@@ -221,7 +222,7 @@ as.data.frame.tip <- function(x, row.names, optional, ...)
   }
 
 ## a function to convert a list of lorenz curves into a dataset
-as.data.frame.tip.list <- function(x, row.names, optional, ...)
+as.data.frame.tip_list <- function(x, row.names, optional, ...)
   {
     obj <- x
     if(!is.list(obj))
@@ -268,7 +269,7 @@ dominates.tip <-  function(x, y, rep.num=TRUE,
   }
 
 
-dominates.tip.list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
+dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
   {
     if(!is.list(object))
       stop("Object is not a list!")
@@ -297,10 +298,12 @@ dominates.tip.list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
   }
 
 ## tip curves for a incdist object
+#' @export
 
-tip.incdist <- function(object, q=5, equivalise = FALSE, only.aggregate=TRUE,
+tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
                            concentration=TRUE, ...)
-  {
+{
+    object <- x
     ## test if this is an incdist  object
     if (!inherits(object, "incdist")){
       stop("First argument must be the incdist object!")
@@ -473,12 +476,12 @@ tip.incdist <- function(object, q=5, equivalise = FALSE, only.aggregate=TRUE,
       } ## partitions (years, mostly, could be countries
     ## ret <- list(ret.y, ret.x)
     ret <- ret.y
-    structure(ret, class = c("tip.incdist", "tip"))
+    structure(ret, class = c("tip_incdist", "tip"))
   }
 
 ## and an as.data.frame method
 
-as.data.frame.tip.incdist <-
+as.data.frame.tip_incdist <-
     function(x, ...)
     {
         obj <- x

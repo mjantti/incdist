@@ -50,7 +50,6 @@ weighted_moment(x,w, 1)
 weighted_mean(x,w, 1)
 weighted_var(x,w)
 
-
 }
 \references{
 

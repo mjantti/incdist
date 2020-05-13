@@ -6,13 +6,21 @@
 \alias{plot.tipl}
 \title{Plot a TIP or CPG curve}
 \usage{
-\method{plot}{tip}(object, add = FALSE, xlab = FALSE, ylab = FALSE,
-  xlim = FALSE, ylim = FALSE, type = FALSE, ...)
+\method{plot}{tip}(
+  x,
+  add = FALSE,
+  xlab = FALSE,
+  ylab = FALSE,
+  xlim = FALSE,
+  ylim = FALSE,
+  type = FALSE,
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class tip.}
-
 \item{add}{A logical. If TRUE, the curve is added to an existing plot.}
+
+\item{object}{An object of class tip.}
 }
 \value{
 A plot.

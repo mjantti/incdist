@@ -4,8 +4,14 @@
 \alias{kolm}
 \title{Kolm's inequality index}
 \usage{
-kolm(x, w = rep(1, length(x)), eta = 1, data = NULL,
-  absolute = FALSE, na.rm = TRUE)
+kolm(
+  x,
+  w = rep(1, length(x)),
+  eta = 1,
+  data = NULL,
+  absolute = FALSE,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{x}{a numerical vector whose index is to be estimated}
@@ -22,6 +28,9 @@ measure be given.}
 
 \item{na.rm}{a logical indicating whether NA's should removed.}
 }
+\value{
+
+}
 \description{
 This function estimates the inequality indices (relative or absolute) of
 Kolm.
@@ -35,9 +44,7 @@ kolm(runif(100), eta = 1)
 
 }
 \references{
-Lambert, P. (1993).  \emph{The distribution and redistribution
-of income. A mathematical analysis.} Manchester University Press,
-Manchester.
+\insertRef{lambert1993}{incdist}
 }
 \seealso{
 \code{\link{gini}} \code{\link{ge}}, \code{\link{atkinson}}

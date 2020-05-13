@@ -3,15 +3,25 @@
 \name{plot.lorenz}
 \alias{plot.lorenz}
 \alias{lines.lorenz}
-\alias{plot.lorenz.list}
+\alias{plot.lorenz_list}
 \title{Plot a Lorenz curve}
 \usage{
-\method{plot}{lorenz}(object, add = FALSE, lor.type = "ord",
-  diff = FALSE, xlab = FALSE, ylab = FALSE, ylim = FALSE,
-  xlim = FALSE, type = "l", lty = FALSE, ...)
+\method{plot}{lorenz}(
+  x,
+  add = FALSE,
+  lor.type = "ord",
+  diff = FALSE,
+  xlab = FALSE,
+  ylab = FALSE,
+  ylim = FALSE,
+  xlim = FALSE,
+  type = "l",
+  lty = FALSE,
+  ...
+)
 }
 \arguments{
-\item{object}{A Lorenz curve object.}
+\item{x}{A Lorenz curve object.}
 
 \item{add}{A logical. If TRUE, the Lorenz curve is added to a plot.}
 
@@ -35,7 +45,7 @@ A plot.
 plot.lorenz plots a (generalized) Lorenz curve.
 }
 \details{
-plot.lorenz.list plots a list of lorenz curve on the same graph and optionally
+plot.lorenz_list plots a list of lorenz curve on the same graph and optionally
 places a legend using the names of the lorenz curves as labels.
 
 An ordinary Lorenz curve is bounded in the unit box, is positive and
@@ -49,6 +59,9 @@ correectly set.
 \examples{
 
 plot(lorenz(runif(100), q = 5))
+
+}
+\references{
 
 }
 \seealso{

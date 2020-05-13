@@ -1,10 +1,10 @@
 #' Kolm's inequality index
-#' 
+#'
 #' This function estimates the inequality indices (relative or absolute) of
 #' Kolm.
-#' 
+#'
 #' The inequality index.
-#' 
+#'
 #' @param x a numerical vector whose index is to be estimated
 #' @param w an optional vector of non-negative integer values weights.
 #' @param eta the inequality aversion parameter (>0). Larger value indicate
@@ -16,14 +16,14 @@
 #' @return
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{gini}} \code{\link{ge}}, \code{\link{atkinson}}
-#' @references Lambert, P. (1993).  \emph{The distribution and redistribution
-#' of income. A mathematical analysis.} Manchester University Press,
-#' Manchester.
+#' @references
+#' \insertRef{lambert1993}{incdist}
+#'
 #' @examples
-#' 
+#'
 #' kolm(runif(100), eta = 1)
-#' 
-#' @export kolm
+#'
+#' @export
 kolm <-
   function(x, w = rep(1,length(x)), eta = 1, data = NULL,
            absolute = FALSE, na.rm = TRUE)
@@ -35,14 +35,14 @@ kolm <-
           on.exit(detach(data))
       }
   # moved treatment of NA's, missing values and others to utility function
-  # "clean.income"
-  incmat <- clean.income(x, w)
+  # "clean_income"
+  incmat <- clean_income(x, w)
   x <- incmat[,1]
   w <- incmat[,2]
   #retval <- list()
-  m <- weighted.mean(x,w)
+  m <- weighted_mean(x,w)
   km <- eta*(m - x)
-  km <- weighted.mean(exp(km), w)
+  km <- weighted_mean(exp(km), w)
   retval <- 1/eta*log(km)
   if(absolute) retval <- m - retval*m ## this can not be right
   ## detach the data

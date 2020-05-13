@@ -1,9 +1,9 @@
 #' Atkinson's inequality index
-#' 
+#'
 #' This function estimates Atkinson's inequality index.
-#' 
+#'
 #' None.
-#' 
+#'
 #' @aliases atkinson ede
 #' @param x a numerical vector whose index is to be estimated
 #' @param w an optional vector of non-negative integer values weights.
@@ -17,13 +17,13 @@
 #' @return The inequality index.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{gini}} \code{\link{ge}}
-#' @references Lambert, P. (1993).  \emph{The distribution and redistribution
-#' of income. A mathematical analysis.} Manchester University Press,
-#' Manchester.
+#' @references
+#' \insertRef{lambert1993}{incdist}
+#'
 #' @examples
-#' 
+#'
 #' atkinson(runif(100), eta = 1/2)
-#' 
+#'
 #' @export atkinson
 atkinson <-
   function(x, w = rep(1,length(x)), eta = 1/2, data = NULL, na.rm = TRUE,
@@ -35,13 +35,12 @@ atkinson <-
           on.exit(detach(data))
       }
   # moved treatment of NA's, missing values and others to utility function
-  # "clean.income"
-  incmat <- clean.income(x, w,
-                         no.negatives = no.negatives, na.rm = na.rm)
+  # "clean_income"
+  incmat <- clean_income(x, w, no.negatives = no.negatives, na.rm = na.rm)
   x <- incmat[,1]
   w <- incmat[,2]
   #retval <- list()
-  m <- weighted.mean(x,w)
+  m <- weighted_mean(x,w)
   if (eta == 1)
     {
       ## geom.mean <- function(x, w){
@@ -49,12 +48,12 @@ atkinson <-
       ##   gm <- prod(w * x)^(1/sumw)
       ##   gm}
       ## edei <- geom.mean(x, w)
-      edei <- exp(weighted.mean(log(x), w))
+      edei <- exp(weighted_mean(log(x), w))
       retval <- 1 - edei/m
-    } 
+    }
   else
     {
-      edei <- weighted.mean(x^(1-eta),w)
+      edei <- weighted_mean(x^(1-eta),w)
       retval <- 1 - edei^(1/(1-eta))/m
     }
   ## detach the data
@@ -62,4 +61,3 @@ atkinson <-
   ##   detach(data)
   retval
 }
-

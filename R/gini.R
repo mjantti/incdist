@@ -10,7 +10,7 @@
 #' gini.incdist function works on incdist objects (and currently
 #' produces lots of output, much of which is unlikely to be useful.)
 #'
-#' @aliases gini gini.default gini.incdist concentration coefficient
+#' @aliases gini gini.default gini.incdist concentration_coefficient concentration.coefficient
 #' @param x a numerical vector whose index is to be estimated.
 #' @param object an incdist object.
 #' @param w an optional vector of non-negative integer values weights.
@@ -23,10 +23,10 @@
 #'     coefficient.
 #' @return The generalized gini or concentration coefficient.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso \code{\link{ineq}}, \code{\link{incdist}}
-#' @references Lambert, P. (1993).  \emph{The distribution and
-#'     redistribution of income. A mathematical analysis.} Manchester
-#'     University Press, Manchester.
+#' @seealso \code{\link{inequality}}, \code{\link{incdist}}, \code{\link{lorenz}}
+#' @references
+#' \insertRef{lambert1993}{incdist}
+#'
 #' @examples
 #'
 #' gini(runif(20), eta = 2)
@@ -39,9 +39,9 @@ gini <- function(x, ...)
   UseMethod("gini", x)
 }
 #' @export
-gini.incdist <- function(object, ...)
+gini.incdist <- function(x, ...)
   {
-    inequality.incdist(object, type = "gini", ...)
+    inequality.incdist(x, type = "gini", ...)
   }
 
                                         # this one now seems OK.
@@ -59,8 +59,8 @@ gini.default <-
           on.exit(detach(data))
       }
   ## moved treatment of NA's, missing values and others to utility function
-  ## "clean.income"
-  incmat <- clean.income(cbind(x, ranked), w,
+  ## "clean_income"
+  incmat <- clean_income(cbind(x, ranked), w,
                          no.negatives = no.negatives, na.rm = na.rm)
   x <- incmat[,1]
   ranked <- incmat[,2]
@@ -73,7 +73,7 @@ gini.default <-
   x <- x[ind]
   w <- w[ind]
   w.tmp <- sum(w) - cumsum(w) + 1
-  mu <- weighted.mean(ranked, w)
+  mu <- weighted_mean(ranked, w)
   ## or maybe I need to know here if weights are probs or freq weights?
   r <- (c(w.tmp[1:(length(w.tmp)-1)], 0) + 1/2*w)/sum(w)
   if(n > 100)
@@ -96,6 +96,6 @@ gini.default <-
   ret
 }
 #' @export
-concentration.coef <- function(x,  w = rep(1,length(x)), eta = 2, na.rm = TRUE,
-           data = NULL, ranked = x)
+concentration_coef <- function(x,  w = rep(1,length(x)), eta = 2, na.rm = TRUE,
+           data = NULL, ranked = x, ...)
   gini(x,  w, eta, na.rm, data, ranked)

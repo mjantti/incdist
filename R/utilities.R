@@ -36,18 +36,18 @@ integrate.locfit <- function(x, y, ...){
 #' Weighted statistic
 #'
 #'
-#' The weighted.moment is a wrapper around R's weighted.mean which raises the
-#' variable x to the power a before taking the weighted mean.  weighted.var and
-#' weighted.std are based on weighted.moment.
+#' The weighted_moment is a wrapper around R's weighted_mean which raises the
+#' variable x to the power a before taking the weighted mean.  weighted_var and
+#' weighted_std are based on weighted_moment.
 #'
-#' The weighted.quantile function yields a version of quantiles which does not
+#' The weighted_quantile function yields a version of quantiles which does not
 #' quite reach the sophistication of that built into R. In particular, for a
 #' probability p this function yields the highest x for which cumsum(w)/sum(w)
-#' < p, rather than some interpolated value.  weighted.median is
-#' weighted.quantile(x,w, p = .5)
+#' < p, rather than some interpolated value.  weighted_median is
+#' weighted_quantile(x,w, p = .5)
 #'
-#' @aliases weighted.moment weighted.var weighted.std weighted.quantile
-#' weighted.median weighted.sum
+#' @aliases weighted_moment weighted_var weighted_std weighted_quantile
+#' weighted_median weighted_sum weighted.moment
 #' @param x the variable whose moment is to be estimated
 #' @param w the weights
 #' @param probs the probabilities of the quantiles
@@ -57,20 +57,21 @@ integrate.locfit <- function(x, y, ...){
 #' @return The desired statistic. Weighted quantile produces a vector with
 #' length(probs).
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso \code{\link{weighted.mean}}, \code{\link{cov.wt}}
+#' @seealso \code{\link{weighted_mean}}, \code{\link{cov.wt}}
 #' @references
 #' @examples
 #'
 #' x <- rexp(100)
 #' w <- rpois(100,5)
-#' weighted.median(x, w)
-#' weighted.moment(x,w, 1)
-#' weighted.mean(x,w, 1)
-#' weighted.var(x,w)
+#' weighted_median(x, w)
+#' weighted_moment(x,w, 1)
+#' weighted_mean(x,w, 1)
+#' weighted_var(x,w)
 #'
+#' @importFrom Hmisc wtd.quantile
 #'
 
-weighted.moment <- function(x,w,a=1, ranked=x, na.rm = FALSE) {
+weighted_moment <- function(x,w,a=1, ranked=x, na.rm = FALSE) {
   if (missing(w))
     w <- rep(1, length(x))
   if (na.rm) {
@@ -81,7 +82,11 @@ weighted.moment <- function(x,w,a=1, ranked=x, na.rm = FALSE) {
   weighted.mean(x^a,w, na.rm = na.rm)
 }
 
-weighted.var <- function(x, w, ranked=x, na.rm = FALSE)
+weighted_mean <- function(x,w, na.rm = FALSE){
+    weighted.mean(x, w, na.rm)
+}
+
+weighted_var <- function(x, w, ranked=x, na.rm = FALSE)
   {
     if(missing(w))
       {
@@ -100,14 +105,14 @@ weighted.var <- function(x, w, ranked=x, na.rm = FALSE)
       }
   }
 
-weighted.std <- function(x, w, ranked=x, na.rm = FALSE)
-  sqrt(weighted.var(x,w, na.rm = na.rm))
+weighted_std <- function(x, w, ranked=x, na.rm = FALSE)
+  sqrt(weighted_var(x,w, na.rm = na.rm))
 
 
 #
 # weighted quantiles. various versions, none good.
 
-weighted.quantile.2 <-
+weighted_quantile_2 <-
   function(x, w = rep(1, length(x)),
            probs = seq(0, 1, 0.25), ranked=x, na.rm = FALSE, names = TRUE) {
     # n <- length(x)
@@ -168,12 +173,12 @@ weighted.quantile.2 <-
 # this is a version that departs from the unweighted quantile funtion in R
 # incomplete
 
-weighted.quantile.defunct <-
+weighted_quantile_defunct <-
   function (x, w = rep(1,length(x)), ranked=x,
                  probs = seq(0, 1, 0.25), na.rm = FALSE, names = TRUE)
 {
   # if no weights are given, use the built-in function
-  if (missing(w)) quantile.default(x, probs, na.rm, names)
+  if (missing(w)) quantile(x, probs, na.rm, names)
   else if (length(x) != length(w))
     stop("Weights and variable vectors are of unequal length!")
   if (na.rm)
@@ -211,11 +216,11 @@ weighted.quantile.defunct <-
  qs
 }
 
-weighted.quantile.1 <-
+weighted_quantile_1 <-
   function(x, w, probs = seq(0, 1, 0.25), ranked=x, na.rm = FALSE, names = TRUE)
 {
   if(missing(w))
-    quantile.default(x, probs = seq(0, 1, 0.25), na.rm = FALSE, names = TRUE)
+    quantile(x, probs = seq(0, 1, 0.25), na.rm = FALSE, names = TRUE)
   else
     {
       # this is *incredibly* inefficient!
@@ -226,31 +231,31 @@ weighted.quantile.1 <-
       # generate the population level x
       x <- rep(x,w)
       # call quantile.default
-      quantile.default(x, probs, na.rm = FALSE, names = TRUE) }
+      quantile(x, probs, na.rm = FALSE, names = TRUE) }
 }
 
-weighted.quantile <-
+weighted_quantile <-
   function(x, w = rep(1, length(x)),
            probs = seq(0, 1, 0.25), ranked=x, na.rm = FALSE, names = TRUE)
   {
     ## call wtd.quantile
     wtd.quantile(x, w, probs, na.rm=na.rm)
-    ##weighted.quantile.1(x, w, probs, na.rm=na.rm)
+    ##weighted_quantile.1(x, w, probs, na.rm=na.rm)
   }
 
 # define this last.
 
-weighted.median <- function(x, w, ranked=x, na.rm = FALSE, ...) {
+weighted_median <- function(x, w, ranked=x, na.rm = FALSE, ...) {
   if (missing(w))
     w <- rep(1, length(x))
   if (na.rm) {
     w <- w[i <- !is.na(x)]
     x <- x[i]
     }
-  weighted.quantile(x, w, .5, ...)
+  weighted_quantile(x, w, .5, ...)
 }
 
-weighted.sum <- function(x, w, ranked=x, na.rm = FALSE)
+weighted_sum <- function(x, w, ranked=x, na.rm = FALSE)
   {
   if (missing(w))
     w <- rep(1, length(x))
@@ -266,7 +271,7 @@ weighted.sum <- function(x, w, ranked=x, na.rm = FALSE)
 # some additional weight funtions
 # stolen from definition of ecdf in library(stepfun)
 # do I need to load stepfun first?
-weighted.ecdf <-
+weighted_ecdf <-
   function (x, w = rep(1,length(x)), ranked=x)
 {
   order.x <- order(x)
@@ -281,7 +286,7 @@ weighted.ecdf <-
   rval
 }
 
-weighted.rank <-
+weighted_rank <-
   function (x, w = rep(1,length(x)), ranked=x)
 {
   if((n <- length(x)) != (n.w <- length(w))) stop("x and w are not of equal length")
@@ -296,37 +301,37 @@ weighted.rank <-
   rank
 }
 
-weighted.table.mean <-
+weighted_table_mean <-
   function (x1, w1, l, ...)
 {
   tapply(seq(along = x1), l, function(i, x = x1, w = w1)
          weighted.mean(x[i], w[i],...))
 }
 
-weighted.table.old <-
-  function (x1, w1, l, ...) weighted.table.mean(x1=x1, w1=w1, l=l, ...)
+weighted_table_old <-
+  function (x1, w1, l, ...) weighted_table.mean(x1=x1, w1=w1, l=l, ...)
 
-weighted.table.sum <-
+weighted_table_sum <-
   function (x1, w1, l,...)
 {
   tapply(seq(along = x1), l, function(i, x = x1, w = w1)
-         weighted.sum(x[i], w[i],...))
+         weighted_sum(x[i], w[i],...))
 }
 
-weighted.table.median <-
+weighted_table_median <-
   function (x1, w1, l,...)
 {
   tapply(seq(along = x1), l, function(i, x = x1, w = w1)
-         weighted.median(x[i], w[i],...))
+         weighted_median(x[i], w[i],...))
 }
 
-weighted.table.var <-
+weighted_table_var <-
   function (x1, w1, l,...)
 {
   tapply(seq(along = x1), l, function(i, x = x1, w = w1)
-         weighted.var(x[i], w[i],...))
+         weighted_var(x[i], w[i],...))
 }
-weighted.table <-
+weighted_table <-
   function (w1, l, na.rm=TRUE, relative=FALSE, ...)
 {
   tm <- tapply(seq(along = w1), l, function(i, w = w1) sum(w[i],...))
@@ -339,7 +344,7 @@ weighted.table <-
 
 ##
 
-weighted.crosstable <- function(x1, x2, w1 = rep(1, length(x1)))
+weighted_crosstable <- function(x1, x2, w1 = rep(1, length(x1)))
 {
 
   ## error checks: are factors, do weights exist, at least
@@ -349,7 +354,7 @@ weighted.crosstable <- function(x1, x2, w1 = rep(1, length(x1)))
   y
 }
 
-weighted.crosstable.old <- function(l, w1 = rep(1, length(l[[1]])))
+weighted_crosstable_old <- function(l, w1 = rep(1, length(l[[1]])))
 {
 
   ## error checks: are factors, do weights exist, at least
@@ -390,12 +395,12 @@ weighted.crosstable.old <- function(l, w1 = rep(1, length(l[[1]])))
 #'
 #' x <- c(NA, 1:5, Inf, -1, NaN, -Inf)
 #' w <- rpois(length(x), 2)
-#' clean.income(x, w)
+#' clean_income(x, w)
 #' x <- cbind(x, y = rpois(length(x), 10))
-#' clean.income(x, w)
+#' clean_income(x, w)
 #'
-#' @export clean.income
-clean.income <- function(x, w = rep(1,length(x)),
+#' @export clean_income
+clean_income <- function(x, w = rep(1,length(x)),
                          no.negatives = FALSE,
                          no.nans = TRUE,
                          no.infinites = TRUE,
@@ -506,7 +511,7 @@ ineqvar <- function(x, w, ranked=x, na.rm = FALSE, index="gini",...){
     ## map all cv2 etc to ge
     ## get value of inequality index
     ineq <- do.call(index, list(x=x, w=w, ...))
-    mu <- weighted.mean(x, w)
+    mu <- weighted_mean(x, w)
     ## calculate the Z
     ## Gini (p 406, eq 6.77
     eta <- switch(index, gini=2, ge=2, ge0=0, ge1=1)
