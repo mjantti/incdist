@@ -10,4 +10,4 @@ RdMacros: Rdpack
 Description: This package contains functions and objects to assist in the analysis of income (or wealth or consumption) distributions.
 License: GPL-2
 URL: http://www.r-project.org
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

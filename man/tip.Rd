@@ -74,7 +74,7 @@ plot(tip.ex, lwd = 2)
 
 }
 \references{
-\insertRef{jenkinsandlamber1997}{incdist}
+\insertRef{jenkinsandlambert1997}{incdist}
 }
 \seealso{
 \code{\link{lorenz}}, \code{\link{fgt}}
