@@ -1,10 +1,11 @@
 #' Inequality index based on prospect theory
 #'
-#' This function estimates Atkinson's inequality index.
+#' This function prospect-theory-based estimates of Atkinson's inequality index for some
+#' reference value.
 #'
 #' None.
 #'
-#' @aliases prospect ede
+#' @aliases prospect
 #' @param x a numerical vector whose index is to be estimated, consisting of
 #' income less some reference value
 #' @param w an optional vector of non-negative integer values weights.
@@ -15,9 +16,8 @@
 #' @param na.rm a logical indicating whether NA's should removed.
 #' @return The inequality index.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso \code{\link{gini}} \code{\link{ge}}
+#' @seealso \code{\link{gini}} \code{\link{ge}}  \code{\link{atkinson}}
 #' @references
-#'
 #' \insertRef{janttikanburnyyssolaandpirttila2014}{incdist}
 #'
 #' @examples
@@ -39,8 +39,7 @@ prospect <-
   x <- incmat[,1]
   w <- incmat[,2]
   #retval <- list()
-  if (eta == 1)
-    {
+  if (eta == 1){
       geom.mean <- function(x, w){
         sumw <- sum(w)
         gm <- prod(w * x)^(1/sumw)
@@ -49,7 +48,7 @@ prospect <-
     }
   else
     edei <- weighted_mean(x^(1-eta),w)
-  m <- weighted_mean(x,w)
+  m <- weighted_mean(x ,w)
   retval <- 1 - edei^(1/(1-eta))/m
   ## detach the data
   ## if(!is.null(data) & is.data.frame(data))

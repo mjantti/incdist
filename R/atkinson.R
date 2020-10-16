@@ -4,7 +4,7 @@
 #'
 #' None.
 #'
-#' @aliases atkinson ede
+#' @aliases atkinson
 #' @param x a numerical vector whose index is to be estimated
 #' @param w an optional vector of non-negative integer values weights.
 #' @param eta the inequality aversion parameter. Larger value indicate higher
@@ -16,7 +16,7 @@
 #' of x
 #' @return The inequality index.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso \code{\link{gini}} \code{\link{ge}}
+#' @seealso \code{\link{gini}} \code{\link{ge}} \code{\link{prospect}}
 #' @references
 #' \insertRef{lambert1993}{incdist}
 #'

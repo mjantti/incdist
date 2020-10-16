@@ -168,11 +168,12 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
   retval
 }
 
+#' @export
 is.tip <- function(object) inherits(object, "tip")
 
 # a print method
 
-
+#' @export
 summary.tip <- function(object, ...) {
     micro <- object$n == length(object$p) - 1
     if(micro) {
@@ -184,6 +185,7 @@ summary.tip <- function(object, ...) {
     structure(object, class = c("sum.tip", class(object)))
   }
 
+#' @export
 print.sum.tip <- function(x, ...){
   # how to handle a micro curve? in summary?
   q <- length(x$p) - 1
@@ -222,6 +224,7 @@ as.data.frame.tip <- function(x, row.names, optional, ...)
   }
 
 ## a function to convert a list of lorenz curves into a dataset
+#' @export
 as.data.frame.tip_list <- function(x, row.names, optional, ...)
   {
     obj <- x
@@ -241,7 +244,7 @@ as.data.frame.tip_list <- function(x, row.names, optional, ...)
 
 
 ## tip dominance
-
+#' @export
 dominates.tip <-  function(x, y, rep.num=TRUE,
                            above.p=FALSE)
   {
@@ -268,7 +271,7 @@ dominates.tip <-  function(x, y, rep.num=TRUE,
     ret
   }
 
-
+#' @export
 dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
   {
     if(!is.list(object))
@@ -299,7 +302,6 @@ dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
 
 ## tip curves for a incdist object
 #' @export
-
 tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
                            concentration=TRUE, ...)
 {
@@ -480,7 +482,7 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
   }
 
 ## and an as.data.frame method
-
+#' @export
 as.data.frame.tip_incdist <-
     function(x, ...)
     {

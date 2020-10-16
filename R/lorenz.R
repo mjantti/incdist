@@ -316,10 +316,11 @@ is.lorenz <- function(x, ...) inherits(x, "lorenz")
 
 
 ## summary and print methods
-
+#' @export
 summary.lorenz <- function(x, ...)
   structure(x, class = c("summary.lorenz", class(object)))
 
+#' @export
 print.summary.lorenz <- function(x, ...){
   q <- length(x$p)
   cat("Lorenz curve at ", q, " points.\n")
@@ -334,6 +335,7 @@ print.summary.lorenz <- function(x, ...){
   invisible(x)
 }
 
+#' @export
 print.lorenz <- function(x, ...)
   {
     object <- x
@@ -550,7 +552,7 @@ dominates.lorenz_list <-
 
 ## the variance using Beach and Davidson and Beach and Kaliski
 
-
+#' @export
 var_lor <- function(x, what = "lorenz", ...)
 {
     object <- x
@@ -884,7 +886,6 @@ as.data.frame.lorenz_incdist <-
 
 ## convert from a data.frame to a (single) lorenz curve
 #' @export
-
 as.lorenz <- function(df, namel=list(p="p", ordinates="ordinates"), ...)
 {
     q <- dim(df)[1]-1

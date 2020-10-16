@@ -173,7 +173,7 @@ incdist.formula <-
     class(ret) <- "incdist"
     ret
   }
-
+#' @export
 print.incdist <- function(object, ...)
   {
     if(!is.incdist(object)) stop("Not an incdist object!")
@@ -192,6 +192,7 @@ print.incdist <- function(object, ...)
 ## is the first argument a formula?
 ## group if the grouping factor(s)
 ## NB: problem with Gini coefficient use
+#' @export
 summary.incdist <- function(object,
                             equivalise = FALSE,
                             func = c("weighted_mean", "weighted_std",
@@ -475,7 +476,7 @@ summary.incdist <- function(object,
 
 
 ## do a print.summary function for incdist
-
+#' @export
 print.summary.incdist <- function(object, all = FALSE, what = TRUE,
                                   relative = FALSE, ...)
   {
@@ -582,7 +583,7 @@ print.summary.incdist <- function(object, all = FALSE, what = TRUE,
 ## I need better methods to display my results
 ## the summary object has results for the top-level variables in [[1]]
 ## and all components in [[2]]
-
+#' @export
 incdist.as.array <- function(object, ...)
   {
     ##if(!inherits(object, "summary.incdist"))
@@ -606,7 +607,7 @@ incdist.as.array <- function(object, ...)
   }
 
 ## the predicate function
-
+#' @export
 is.incdist <- function(object) inherits(object, "incdist")
 
 #' Transform an incdist object with an equivalence scale
@@ -651,8 +652,8 @@ is.incdist <- function(object) inherits(object, "incdist")
 #'
 #' eqscale(id.0)
 #'
-#' @export
 
+#' @export
 eqscale <- function(object)
   {
     .tmp.eqscale <-   function (object)
@@ -710,7 +711,6 @@ eqscale <- function(object)
 #'     University Press, Manchester.
 
 #' @export
-
 inequality <- function(x, ...)
 {
   if(is.null(class(x))) class(x)  <- data.class(x)
@@ -794,6 +794,7 @@ poverty.incdist <-
 
 
 ## make a "as.data.frame" method
+#' @export
 as.data.frame.incdist <- function(object, all=TRUE, what=TRUE,
                                   relative=FALSE, ...)
   {

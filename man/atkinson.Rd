@@ -2,7 +2,6 @@
 % Please edit documentation in R/atkinson.R
 \name{atkinson}
 \alias{atkinson}
-\alias{ede}
 \title{Atkinson's inequality index}
 \usage{
 atkinson(
@@ -49,7 +48,7 @@ atkinson(runif(100), eta = 1/2)
 \insertRef{lambert1993}{incdist}
 }
 \seealso{
-\code{\link{gini}} \code{\link{ge}}
+\code{\link{gini}} \code{\link{ge}} \code{\link{prospect}}
 }
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}

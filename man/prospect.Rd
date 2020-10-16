@@ -2,7 +2,6 @@
 % Please edit documentation in R/prospect.R
 \name{prospect}
 \alias{prospect}
-\alias{ede}
 \title{Inequality index based on prospect theory}
 \usage{
 prospect(x, w = rep(1, length(x)), eta = 1, data = NULL, na.rm = TRUE)
@@ -25,7 +24,8 @@ preference.}
 The inequality index.
 }
 \description{
-This function estimates Atkinson's inequality index.
+This function prospect-theory-based estimates of Atkinson's inequality index for some
+reference value.
 }
 \details{
 None.
@@ -39,7 +39,7 @@ prospect(runif(100), eta = 1/2)
 \insertRef{janttikanburnyyssolaandpirttila2014}{incdist}
 }
 \seealso{
-\code{\link{gini}} \code{\link{ge}}
+\code{\link{gini}} \code{\link{ge}}  \code{\link{atkinson}}
 }
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}
