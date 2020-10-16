@@ -130,7 +130,7 @@ plot.lorenz_list(list("1"=lor.1, "2"=lor.2))
 }
 \references{
 \insertRef{lambert1993}{incdist}
-\insertRef{beachanddavidson1983a}{incdist}
+\insertRef{beachanddavidson1983}{incdist}
 \insertRef{beachandkaliski1986}{incdist}
 }
 \seealso{

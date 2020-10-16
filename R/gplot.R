@@ -152,7 +152,7 @@ plot.lorenz.defunct <-
   d
 }
 
-
+#' @export
 lines.lorenz <-
   function(x, lor.type = "ord", diff = FALSE, ...)
 {
@@ -224,6 +224,7 @@ plot.lorenz_list <-  function(x, add = FALSE, lor.type = "ord",
   }
 
 ## the incdist method
+#' @export
 plot.lorenz_incdist <-  function(x, add = FALSE, lor.type = "ord",
                           diff = FALSE,
                           xlab = FALSE, ylab = FALSE,

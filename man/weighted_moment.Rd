@@ -7,7 +7,6 @@
 \alias{weighted_quantile}
 \alias{weighted_median}
 \alias{weighted_sum}
-\alias{weighted.moment}
 \title{Weighted statistic}
 \usage{
 weighted_moment(x, w, a = 1, ranked = x, na.rm = FALSE)
@@ -49,9 +48,6 @@ weighted_median(x, w)
 weighted_moment(x,w, 1)
 weighted_mean(x,w, 1)
 weighted_var(x,w)
-
-}
-\references{
 
 }
 \seealso{

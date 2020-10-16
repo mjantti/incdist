@@ -88,17 +88,17 @@ fgt <-
   ##   detach(data)
   retval
 }
-
+#' @export
 fgt0 <- function(...)
     {
         fgt(...)$fgt
     }
-
+#' @export
 fgt1 <- function(...)
     {
         fgt(alpha=1, ...)$fgt
     }
-
+#' @export
 fgt2 <- function(...)
     {
         fgt(alpha=2, ...)$fgt

@@ -77,7 +77,7 @@
 #' \code{\link{locfit}}
 #' @references
 #' \insertRef{lambert1993}{incdist}
-#' \insertRef{beachanddavidson1983a}{incdist}
+#' \insertRef{beachanddavidson1983}{incdist}
 #' \insertRef{beachandkaliski1986}{incdist}
 #'
 #'
