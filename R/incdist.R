@@ -193,11 +193,12 @@ print.incdist <- function(object, ...)
 ## group if the grouping factor(s)
 ## NB: problem with Gini coefficient use
 #' @export
+## this function needs quite a bit of work
 summary.incdist <- function(object,
                             equivalise = FALSE,
                             func = c("weighted_mean", "weighted_std",
-                              "gini.default", "concentration.coef"),
-                            poverty=FALSE, concentration = !poverty,
+                              "gini.default"),
+                            poverty=FALSE, concentration = FALSE,
                             povertyline=NULL,
                             povertyline.function="weighted_median",
                             povertyline.fraction=0.5,
@@ -219,7 +220,7 @@ summary.incdist <- function(object,
     on.exit(detach(object))
     ## see lorenz
     ##on.exit(## detach(object))
-    income <- terms(formula, data = frm)
+    income <- terms(object$formula, data = frm)
     if(length(panames))
        pal <- levels(frm[[panames]])
     if(length(grnames))
@@ -395,7 +396,7 @@ summary.incdist <- function(object,
                         if (!count.grnames[i]) next
                         if(!is.null(weights))
                           {
-                            if(func[k] == "concentration.coef" || concentration)
+                            if(func[k] == "concentration_coef" || concentration)
                               {
                                 tmp.res[[k]] <-
                                   do.call(func[k],
