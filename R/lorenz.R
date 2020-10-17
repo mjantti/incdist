@@ -2,7 +2,7 @@
 #' A generalized lorenz curve
 #'
 #' \code{lorenz}, \code{lorenz.default}, \code{lorenz.locfit} and
-#' \code{lorenz_incdist} compute a (possibly generalized) Lorenz curve. The
+#' \code{lorenz.incdist} compute a (possibly generalized) Lorenz curve. The
 #' default method assumes the data are vectors, the locfit method assumes that
 #' the function is applied to a locfit density object, and the incdist method
 #' assumes the object has been created by the incdist methods. The curve is
