@@ -660,7 +660,7 @@ lorenz.incdist <- function(x, q=5, equivalise = FALSE,
     on.exit(detach(object))
     ## this does not work. How should the argument to detach be given?
     ##on.exit(detach("object", character.only=TRUE))
-    income <- terms(formula, data = frm)
+    income <- terms(object$formula, data = frm)
     if(length(panames))
         pal <- levels(frm[[panames]])
     if(length(grnames))

@@ -10,7 +10,7 @@
 #' gini.incdist function works on incdist objects (and currently
 #' produces lots of output, much of which is unlikely to be useful.)
 #'
-#' @aliases gini gini.default gini.incdist concentration_coefficient concentration.coefficient
+#' @aliases gini gini.default gini.incdist concentration_coefficient
 #' @param x a numerical vector whose index is to be estimated.
 #' @param object an incdist object.
 #' @param w an optional vector of non-negative integer values weights.
