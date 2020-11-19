@@ -53,6 +53,9 @@
 #' @param q an integer or logical. If an integer, it is the number of equally
 #' spaced points at which the Lorenz curve ordinates are estimated. If FALSE,
 #' then the Lorenz curve is estimated at every point in x.
+#' @param p the population points at which the Lorenz curve is estimated. Defaults to
+#' equally spaced point on the unit interval. If given, then q is set to the length of
+#' this (minus one).
 #' @param data the data frame where the variables are found.
 #' @param subset use this subset of the data
 #' @param na.rm a logical value governing the treatment of NA:s. If true, NAs
@@ -123,10 +126,12 @@ lorenz <- function(x, ...)
 ## - incdist objects
 ## - ecdf objects
 
+#' @export lorenz.default
 #' @export
 lorenz.default <- function(x, w = rep(1,length(x)),
                            ranked = x,
                            q = 5,
+                           p = NULL,
                            data = NULL,
                            subset,
                            na.rm = TRUE,
@@ -145,8 +150,19 @@ lorenz.default <- function(x, w = rep(1,length(x)),
   ## on.exit(detach(as.name("data"), character.only=TRUE))
   ## moved treatment of NA's, missing values and others to utility function
   ## "clean_income"
-  if (length(x) != length(ranked))
-    warning("The ordering variable length is unequal to x!")
+    if (length(x) != length(ranked))
+      warning("The ordering variable length is unequal to x!")
+    ## some changes needed since I introduced the possibility to give p as an argument
+    if(is.null(p) & q)
+        p <- seq(0, 1, 1/q)
+    ## if p is given and we are not doing microdata (q is not FALSE), make q equal to its length - 1
+    if(!is.null(p) & q)
+        q <- length(p) - 1
+    ## the microdata case (note that lorenz.default needs to deal with this case)
+    if(is.null(p) & !q)
+        p <- q
+    if(!is.null(p) & any(p < 0 | p > 1))
+        stop("Population proportions must be within the unit interval!")
   incmat <- clean_income(cbind(x, ranked), w, no.negatives, na.rm)
   x <- incmat[,1]
   ranked <- incmat[,2]
@@ -171,8 +187,9 @@ lorenz.default <- function(x, w = rep(1,length(x)),
       warning("Few obs per class. You should probably reduce q!")
     ##h.quantx <- wtd.quantile(x, w, probs=seq(0,1,1/q), na.rm = na.rm)
     if(is.null(cutoffs))
-        quantx <- weighted_quantile(ranked, w, probs=seq(0,1,1/q), na.rm = na.rm,
-                                    names = FALSE)
+        quantx <- weighted_quantile(ranked, w,
+                                    probs=p,
+                                    na.rm = na.rm, names = FALSE)
     else
         {
             if(length(cutoffs)!= q + 1)
@@ -240,15 +257,16 @@ lorenz.default <- function(x, w = rep(1,length(x)),
             qmeanx <- tqmeanx
             qsumx <- tqsumx
         }
-    lorenz <- cumsum(qsumx)/(x %*% w)
-    p <- seq(0,1, len = q + 1)[2:(q+1)]
+    lorenz <- cumsum(qsumx)/c(x %*% w)
+    ## the below is stupid
+    ## p <- seq(0,1, len = q + 1)[2:(q+1)]
     ## is it OK to define these here?
     retval$quantile.means <- qmeanx
-    retval$quantile.shares <- qsumx/(x %*% w)
+    retval$quantile.shares <- qsumx/c(x %*% w)
   }
   retval$q <- q
   retval$ordinates <- lorenz
-  retval$p <- p
+  retval$p <- p[-1] ## drop the lowest
   retval$mean <- mu
   retval$sigma2 <- sigma2
   ##unnecessary. methods can get this.
@@ -278,14 +296,17 @@ lorenz.default <- function(x, w = rep(1,length(x)),
   structure(retval, class = "lorenz")
 }
 ## lorenz for a locfit density object
+#' @export lorenz.locfit
 #' @export
 lorenz.locfit <- function(x, ...)
 {
-  if(!inherits(object, "locfit")) stop("Not a locfit object!")
+  if(!inherits(x, "locfit")) stop("Not a locfit object!")
   ## I want to generate the empirical CDF from the object
   ## should I use the data points or the
   ## predicted density at (evalution points, data, ?)
   ##x <- locfit.matrix(object)$x # <- microdata based
+  ## reusing x is not good practice
+  object <- x
   x <- lfknots(object, what = "x")
   x <- sort(x)
   n <- length(x)
@@ -299,7 +320,7 @@ lorenz.locfit <- function(x, ...)
   retval <- list()
   retval$ordinates <- lorenz
   retval$p <- p
-  retval$mean <- x %*% pd
+  retval$mean <- c(x %*% pd)
   ##unnecessary. methods can get this.
   ##retval$g.ordinates <- lorenz*retval$mean
   retval$n <- n
@@ -347,6 +368,7 @@ print.lorenz <- function(x, ...)
     invisible(object)
   }
 ## an as.data.frame method
+#' @export as.data.frame.lorenz
 #' @export
 as.data.frame.lorenz <- function(x, row.names, optional, ...)
   {
@@ -384,6 +406,7 @@ as.data.frame.lorenz <- function(x, row.names, optional, ...)
   }
 
 ## a function to convert a list of lorenz curves into a dataset
+#' @export as.data.frame.lorenz_list
 #' @export
 as.data.frame.lorenz_list <- function(x, row.names, optional, ...)
   {
@@ -404,6 +427,7 @@ as.data.frame.lorenz_list <- function(x, row.names, optional, ...)
 
 ## compare two lorenz curves
 
+#' @export dominates.lorenz
 #' @export
 dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
                              above.p=FALSE, ...)
@@ -497,6 +521,8 @@ dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
       }
     ret
   }
+
+#' @export dominates.lorenz_list
 #' @export
 dominates.lorenz_list <-
   function(x, symmetric=FALSE,
@@ -634,10 +660,12 @@ var_lor <- function(x, what = "lorenz", ...)
 
 
 ## lorenz curves for a incdist object
+#' @export lorenz.incdist
 #' @export
-lorenz.incdist <- function(x, q=5, equivalise = FALSE,
+lorenz.incdist <- function(x, q=5, p = NULL,
+                           equivalise = FALSE,
                            group.cutoffs=TRUE,
-                           concentration=TRUE, ...)
+                           concentration=FALSE, ...)
 {
     object <- x
     ## test if this is an incdist  object
@@ -660,6 +688,15 @@ lorenz.incdist <- function(x, q=5, equivalise = FALSE,
     on.exit(detach(object))
     ## this does not work. How should the argument to detach be given?
     ##on.exit(detach("object", character.only=TRUE))
+    ## some changes needed since I introduced the possibility to give p as an argument
+    if(is.null(p) & q)
+        p <- seq(0, 1, 1/q)
+    ## if p is given and we are not doing microdata (q is not FALSE), make q equal to its length - 1
+    if(!is.null(p) & q)
+        q <- length(p) - 1
+    ## the microdata case (note that lorenz.default needs to deal with this case)
+    if(!q)
+        p <- q
     income <- terms(object$formula, data = frm)
     if(length(panames))
         pal <- levels(frm[[panames]])
@@ -777,10 +814,10 @@ lorenz.incdist <- function(x, q=5, equivalise = FALSE,
             if (!count.grnames[i]) next
             if(!is.null(weights))
               ret.y[[i]][[l]] <-
-                lorenz.default(as.vector(y), weights, q=q, cutoffs=cutoffs)
+                lorenz.default(as.vector(y),  w = weights, p = p , cutoffs = cutoffs)
             else
               ret.y[[i]][[l]] <-
-                lorenz.default(as.vector(y), q=q, cutoffs=cutoffs)
+                lorenz.default(as.vector(y), p = p, cutoffs = cutoffs)
             if(length(incnames))
               {
                 for(j in 1:length(incnames))
@@ -793,25 +830,20 @@ lorenz.incdist <- function(x, q=5, equivalise = FALSE,
                       {
                         if(concentration)
                           ret.x[[j]][[i]][[l]] <-
-                            lorenz.default(x[,j], w=weights,
-                                           ranked=as.vector(y),
-                                           q=q, cutoffs=cutoffs)
+                              lorenz.default(x[,j], w = weights, ranked = as.vector(y), p = p,
+                                             cutoffs = cutoffs)
                         else
                           ret.x[[j]][[i]][[l]] <-
-                            lorenz.default(x[,j], w=weights,
-                                           q=q, cutoffs=cutoffs)
+                            lorenz.default(x[,j], w = weights, p = p, cutoffs = cutoffs)
                       }
                     else
                       {
                         if(concentration)
                           ret.x[[j]][[i]][[l]] <-
-                            lorenz.default(x[,j],
-                                           ranked=as.vector(y),
-                                           q=q, cutoffs=cutoffs)
+                            lorenz.default(x[,j], ranked=as.vector(y), p = p, cutoffs = cutoffs)
                         else
                           ret.x[[j]][[i]][[l]] <-
-                            lorenz.default(x[,j],
-                                           q=q, cutoffs=cutoffs)
+                            lorenz.default(x[,j], p = p, cutoffs = cutoffs)
                     }
                   } ## j
               } ## if j
@@ -825,6 +857,7 @@ lorenz.incdist <- function(x, q=5, equivalise = FALSE,
 
 
 ## and an as.data.frame method
+#' @export as.data.frame.lorenz_incdist
 #' @export
 as.data.frame.lorenz_incdist <-
     function(x, ...)
@@ -885,6 +918,7 @@ as.data.frame.lorenz_incdist <-
     }
 
 ## convert from a data.frame to a (single) lorenz curve
+#' @export as.lorenz
 #' @export
 as.lorenz <- function(df, namel=list(p="p", ordinates="ordinates"), ...)
 {

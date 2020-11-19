@@ -1,6 +1,6 @@
 Package: incdist
-Version: 0.92-1
-Date: 2020-05-13
+Version: 0.93-1
+Date: 2020-11-19
 Title: A collection of functions for income distribution analysis
 Author: Markus Jantti <markus.jantti@iki.fi>
 Maintainer: Markus Jantti <markus.jantti@iki.fi>

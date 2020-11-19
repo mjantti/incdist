@@ -44,6 +44,7 @@
 #' @importFrom graphics plot lines
 #' @importFrom ggplot2 ggplot
 #'
+#' @export plot.lorenz
 #' @export
 plot.lorenz <- function(x, add = FALSE, lor.type = "ord",
                         diff = FALSE,
@@ -152,6 +153,7 @@ plot.lorenz.defunct <-
   d
 }
 
+#' @export lines.lorenz
 #' @export
 lines.lorenz <-
   function(x, lor.type = "ord", diff = FALSE, ...)
@@ -161,6 +163,7 @@ lines.lorenz <-
 }
 
 ## make a function to plot a list of Lorenz curves
+#' @export plot.lorenz_list
 #' @export
 plot.lorenz_list <-  function(x, add = FALSE, lor.type = "ord",
                           diff = FALSE,
@@ -224,6 +227,7 @@ plot.lorenz_list <-  function(x, add = FALSE, lor.type = "ord",
   }
 
 ## the incdist method
+#' @export plot.lorenz_incdist
 #' @export
 plot.lorenz_incdist <-  function(x, add = FALSE, lor.type = "ord",
                           diff = FALSE,
@@ -320,6 +324,7 @@ plot.lorenz_incdist <-  function(x, add = FALSE, lor.type = "ord",
 #'
 #' plot(tip(runif(100)))
 #'
+#' @export plot.tip
 #' @export
 plot.tip <-
   function(x, add = FALSE,
@@ -343,6 +348,7 @@ plot.tip <-
   d
 }
 
+#' @export lines.tip
 #' @export
 lines.tip <- function(x, ...)
 {
@@ -351,6 +357,7 @@ lines.tip <- function(x, ...)
 
 
 ## make a method to plot a list of Tip curves
+#' @export plot.tip_list
 #' @export
 plot.tip_list <-  function(x, add = FALSE,
                        col = FALSE,
@@ -377,8 +384,10 @@ plot.tip_list <-  function(x, add = FALSE,
     else
       d <- geom_line(data=td, aes(x=p, y=y, colour=elname))
     d
-  }
+}
+
 ## the incdist method
+#' @export plot.tip_incdist
 #' @export
 plot.tip_incdist <-  function(x, add = FALSE, lor.type = "ord",
                           diff = FALSE,

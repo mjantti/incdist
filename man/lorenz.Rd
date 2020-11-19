@@ -31,6 +31,10 @@ ranked.}
 spaced points at which the Lorenz curve ordinates are estimated. If FALSE,
 then the Lorenz curve is estimated at every point in x.}
 
+\item{p}{the population points at which the Lorenz curve is estimated. Defaults to
+equally spaced point on the unit interval. If given, then q is set to the length of
+this (minus one).}
+
 \item{data}{the data frame where the variables are found.}
 
 \item{subset}{use this subset of the data}
@@ -61,7 +65,7 @@ is not false) the within-group incomes shares.}
 }
 \description{
 \code{lorenz}, \code{lorenz.default}, \code{lorenz.locfit} and
-\code{lorenz_incdist} compute a (possibly generalized) Lorenz curve. The
+\code{lorenz.incdist} compute a (possibly generalized) Lorenz curve. The
 default method assumes the data are vectors, the locfit method assumes that
 the function is applied to a locfit density object, and the incdist method
 assumes the object has been created by the incdist methods. The curve is

@@ -5,7 +5,6 @@
 \alias{gini.default}
 \alias{gini.incdist}
 \alias{concentration_coefficient}
-\alias{concentration.coefficient}
 \title{Generalized gini or concentration coefficient}
 \usage{
 gini(x, ...)

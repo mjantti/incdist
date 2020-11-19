@@ -55,15 +55,19 @@
 #' plot(tip.ex, lwd = 2)
 #'
 #' @export
+
 tip <- function(x, ...)
   {
     UseMethod("tip", x)
   }
+
 #' @export
 cpg <- function(x, ...)
   {
     tip(x, ...)
   }
+
+#' @export tip.default
 #' @export
 tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
                         alpha = 0,
@@ -168,6 +172,7 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
   retval
 }
 
+#' @export is.tip
 #' @export
 is.tip <- function(object) inherits(object, "tip")
 
@@ -224,6 +229,7 @@ as.data.frame.tip <- function(x, row.names, optional, ...)
   }
 
 ## a function to convert a list of lorenz curves into a dataset
+#' @export as.data.frame.tip_list
 #' @export
 as.data.frame.tip_list <- function(x, row.names, optional, ...)
   {
@@ -244,6 +250,7 @@ as.data.frame.tip_list <- function(x, row.names, optional, ...)
 
 
 ## tip dominance
+#' @export dominates.tip
 #' @export
 dominates.tip <-  function(x, y, rep.num=TRUE,
                            above.p=FALSE)
@@ -271,6 +278,7 @@ dominates.tip <-  function(x, y, rep.num=TRUE,
     ret
   }
 
+#' @export dominates.tip_list
 #' @export
 dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
   {
@@ -301,6 +309,7 @@ dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
   }
 
 ## tip curves for a incdist object
+#' @export tip.incdist
 #' @export
 tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
                            concentration=TRUE, ...)
@@ -482,6 +491,7 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
   }
 
 ## and an as.data.frame method
+#' @export as.data.frame.tip_incdist
 #' @export
 as.data.frame.tip_incdist <-
     function(x, ...)
