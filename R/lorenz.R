@@ -92,6 +92,7 @@
 #' n <- 100
 #' income <- exp(10 + rnorm(n)*sqrt(2))
 #' weight <- rpois(n,7)
+#' lor <- lorenz(income, weight, p = c(0, .5, .7, .9, .98, 1))
 #' lor <- lorenz(income, weight, q = 5)
 #' plot(lor, main = "Lorenz curve")
 #' plot(lor, lor.type = "gen", main = "Generalized Lorenz curve")
@@ -140,16 +141,16 @@ lorenz.default <- function(x, w = rep(1,length(x)),
                            cutoffs = NULL,
                            ...)
 {
-  ## attach a possible data frame. Remember to detach it!
-  if(!is.null(data) & is.data.frame(data))
+    ## attach a possible data frame. Remember to detach it!
+    if(!is.null(data) & is.data.frame(data))
       {
           attach(data)
           on.exit(detach(data))
       }
-  ## this does not work. How should the argument to detach be given?
-  ## on.exit(detach(as.name("data"), character.only=TRUE))
-  ## moved treatment of NA's, missing values and others to utility function
-  ## "clean_income"
+    ## this does not work. How should the argument to detach be given?
+    ## on.exit(detach(as.name("data"), character.only=TRUE))
+    ## moved treatment of NA's, missing values and others to utility function
+    ## "clean_income"
     if (length(x) != length(ranked))
       warning("The ordering variable length is unequal to x!")
     ## some changes needed since I introduced the possibility to give p as an argument
@@ -158,99 +159,91 @@ lorenz.default <- function(x, w = rep(1,length(x)),
     ## if p is given and we are not doing microdata (q is not FALSE), make q equal to its length - 1
     if(!is.null(p) & q)
         q <- length(p) - 1
-    ## the microdata case (note that lorenz.default needs to deal with this case)
+    ## The microdata case (note that lorenz.default needs to deal with this case)
+    ## something is not right here (2021-12-30)
     if(is.null(p) & !q)
         p <- q
     if(!is.null(p) & any(p < 0 | p > 1))
         stop("Population proportions must be within the unit interval!")
-  incmat <- clean_income(cbind(x, ranked), w, no.negatives, na.rm)
-  x <- incmat[,1]
-  ranked <- incmat[,2]
-  w <- incmat[,3]
-  n <- length(x)
-  retval <- list()
-  mu <- weighted_mean(x,w)
-  sigma2 <- weighted_var(x, w)
-  if (!q) { # the microdataversion
-    ind <- order(ranked)
-    x <- x[ind]
-    w <- w[ind]
-    wsum <- sum(w)
-    p <- cumsum(w)/wsum
-    sx <- c(w %*% x)
-    lorenz <- cumsum(w * x)/sx
-    quantx <- NULL # needed later on
-  }
-  ## using this weighted quantile function is very inefficient!
-  else {
-    if(2*q > length(x))
-      warning("Few obs per class. You should probably reduce q!")
-    ##h.quantx <- wtd.quantile(x, w, probs=seq(0,1,1/q), na.rm = na.rm)
-    if(is.null(cutoffs))
-        quantx <- weighted_quantile(ranked, w,
-                                    probs=p,
-                                    na.rm = na.rm, names = FALSE)
-    else
-        {
+    incmat <- clean_income(cbind(x, ranked), w, no.negatives, na.rm)
+    x <- incmat[,1]
+    ranked <- incmat[,2]
+    w <- incmat[,3]
+    n <- length(x)
+    retval <- list()
+    mu <- weighted_mean(x,w)
+    sigma2 <- weighted_var(x, w)
+    if (!q) { # the microdataversion
+        ind <- order(ranked)
+        x <- x[ind]
+        w <- w[ind]
+        wsum <- sum(w)
+        p <- cumsum(w)/wsum
+        sx <- c(w %*% x)
+        lorenz <- cumsum(w * x)/sx
+        quantx <- NULL # needed later on
+    }
+    ## using this weighted quantile function is very inefficient!
+    else {
+        if(2*q > length(x))
+            warning("Few obs per class. You should probably reduce q!")
+        ##h.quantx <- wtd.quantile(x, w, probs=seq(0,1,1/q), na.rm = na.rm)
+        if(is.null(cutoffs))
+            quantx <- weighted_quantile(ranked, w,
+                                        probs=p,
+                                        na.rm = na.rm, names = FALSE)
+        else  {
             if(length(cutoffs)!= q + 1)
                 stop("cutoffs must have length equal to q + 1")
             quantx <-  cutoffs
         }
-    ## need to add a check here that the cutoffs are unique!
-    duplsx <- duplicated(quantx)
-    ## modified to take the unique cut points. Need to modify the
-    ## lorenz curve if  there are duplicates.
-    cutsx <- cut(ranked, unique(quantx), labels = FALSE, right = FALSE,
-                 include.lowest = TRUE)#, right=F)
-    ## sometimes, these have too few (no support for all quantx)
-    ## and sometimes too many (weird!) elemets
-    ## try not having the "as.vector"
-    qmeanx <-
-        tapply(seq(along=x),cutsx,
-               function(i, x1=x, w1=w)  weighted_mean(x1[i], w1[i]))
-    nqmeanx <- dimnames(qmeanx)[[1]]
-    qmeanx <- as.vector(qmeanx)
-    qsumx <-
-      tapply(seq(along=x),cutsx,
-                       function(i, x1=x, w1=w) sum(x1[i] * w1[i]))
-    nqsumx <- dimnames(qsumx)[[1]]
-    qsumx <- as.vector(qsumx)
-    ## I would probably want to duplicate the vector lorenz at
-    ## the places where there were duplicate values of quantx.
-    ## maybe generate this later?
-    ## lorenz <- cumsum(qsumx)/(x %*% w)
-    if(any(duplsx))
-      {
-        warning("Some cut-off points duplicated!")
-        dupl.index <- which(duplsx)
-        ## tmp.lor <- lorenz
-        tmp.qmeanx <- qmeanx
-        tmp.qsumx <- qsumx
-        for(i in dupl.index)
-          {
-            j <- i+1 # for lorenz curve, i for the others
-            ## tmp.lor <- c(tmp.lor[1:(j-1)],
-            ##              tmp.lor[j-1],
-            ##              tmp.lor[j:length(tmp.lor)])
-            tmp.qmeanx <- c(tmp.qmeanx[1:(i-1)],
-                            tmp.qmeanx[i-1],
-                            tmp.qmeanx[i:length(tmp.qmeanx)])
-            tmp.qsumx <- c(tmp.qsumx[1:(i-1)],
-                           tmp.qsumx[i-1],
-                           tmp.qsumx[i:length(tmp.qsumx)])
+        ## need to add a check here that the cutoffs are unique!
+        duplsx <- duplicated(quantx)
+        ## modified to take the unique cut points. Need to modify the
+        ## lorenz curve if  there are duplicates.
+        cutsx <- cut(ranked, unique(quantx), labels = FALSE, right = FALSE,
+                     include.lowest = TRUE)#, right=F)
+        ## sometimes, these have too few (no support for all quantx)
+        ## and sometimes too many (weird!) elemets
+        ## try not having the "as.vector"
+        qmeanx <-
+            tapply(seq(along=x),cutsx,
+                   function(i, x1=x, w1=w)  weighted_mean(x1[i], w1[i]))
+        nqmeanx <- dimnames(qmeanx)[[1]]
+        qmeanx <- as.vector(qmeanx)
+        qsumx <-
+            tapply(seq(along=x),cutsx,
+                   function(i, x1=x, w1=w) sum(x1[i] * w1[i]))
+        nqsumx <- dimnames(qsumx)[[1]]
+        qsumx <- as.vector(qsumx)
+        ## I would probably want to duplicate the vector lorenz at
+        ## the places where there were duplicate values of quantx.
+        ## maybe generate this later?
+        ## lorenz <- cumsum(qsumx)/(x %*% w)
+        if(any(duplsx)) {
+            warning("Some cut-off points duplicated!")
+            dupl.index <- which(duplsx)
+            ## tmp.lor <- lorenz
+            tmp.qmeanx <- qmeanx
+            tmp.qsumx <- qsumx
+            for(i in dupl.index) {
+                j <- i+1 # for lorenz curve, i for the others
+                tmp.qmeanx <- c(tmp.qmeanx[1:(i-1)],
+                                tmp.qmeanx[i-1],
+                                tmp.qmeanx[i:length(tmp.qmeanx)])
+                tmp.qsumx <- c(tmp.qsumx[1:(i-1)],
+                               tmp.qsumx[i-1],
+                               tmp.qsumx[i:length(tmp.qsumx)])
           }
-        ## lorenz <- tmp.lor
         qmeanx <- tmp.qmeanx
         qsumx <- tmp.qsumx
     }
     ## missing elements in qmeanx or qsumx?
-    if(length(qmeanx)<q)
-        {
-            tqmeanx <- tqsumx <- rep(NA, q)
-            names(tqmeanx) <- names(tqsumx) <- paste(1:q)
-            ## return qmeanx, qsumx
-            for(i in intersect(names(tqmeanx), nqmeanx))
-                {
+    if(length(qmeanx)<q) {
+        tqmeanx <- tqsumx <- rep(NA, q)
+        names(tqmeanx) <- names(tqsumx) <- paste(1:q)
+        ## return qmeanx, qsumx
+        for(i in intersect(names(tqmeanx), nqmeanx)){
                     tqmeanx[i] <- qmeanx[i]
                     tqsumx[i] <- qsumx[i]
                 }
@@ -263,37 +256,40 @@ lorenz.default <- function(x, w = rep(1,length(x)),
     ## is it OK to define these here?
     retval$quantile.means <- qmeanx
     retval$quantile.shares <- qsumx/c(x %*% w)
-  }
-  retval$q <- q
-  retval$ordinates <- lorenz
-  retval$p <- p[-1] ## drop the lowest
-  retval$mean <- mu
-  retval$sigma2 <- sigma2
-  ##unnecessary. methods can get this.
-  ##retval$g.ordinates <- lorenz*retval$mean
-  retval$n <- n
-  retval$sum.weights <- sum(w)
-  ## only define cut.offs if not based on micro-data
-  retval$cut.offs <- quantx
-  ##retval$cut.offs.h <- h.quantx
-  ## detach the data
-  ##if(!is.null(data) & is.data.frame(data))
-  ##  detach(data)
-  ## start calculating the covariance matrices, if requested
-  retval$variances <- NULL
-  if(cov)
-    {
-      if(!q)
-        warning("Cannot calculate the variance for microdata!")
-      else
-        {
-          object <- structure(retval, class = "lorenz")
-          retval$variances <- var_lor(object)
-        }
-
     }
-  ## and now return the object as a structure.
-  structure(retval, class = "lorenz")
+    retval$q <- q
+    retval$ordinates <- lorenz
+    ## drop the lowest unless these are microdata
+    if (!q){
+        retval$p <- p
+    }
+    else {
+        retval$p <- p[-1]
+    }
+    retval$mean <- mu
+    retval$sigma2 <- sigma2
+    ##unnecessary. methods can get this.
+    ##retval$g.ordinates <- lorenz*retval$mean
+    retval$n <- n
+    retval$sum.weights <- sum(w)
+    ## only define cut.offs if not based on micro-data
+    retval$cut.offs <- quantx
+    ##retval$cut.offs.h <- h.quantx
+    ## detach the data
+    ##if(!is.null(data) & is.data.frame(data))
+    ##  detach(data)
+    ## start calculating the covariance matrices, if requested
+    retval$variances <- NULL
+    if(cov){
+        if(!q)
+            warning("Cannot calculate the variance for microdata!")
+        else  {
+            object <- structure(retval, class = "lorenz")
+            retval$variances <- var_lor(object)
+        }
+    }
+    ## and now return the object as a structure.
+    structure(retval, class = "lorenz")
 }
 ## lorenz for a locfit density object
 #' @export lorenz.locfit

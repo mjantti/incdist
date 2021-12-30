@@ -205,7 +205,7 @@ plot.lorenz_list <-  function(x, add = FALSE, lor.type = "ord",
         td$y <- td$gl.ordinates
         td1 <- data.frame(p=c(0, 1), y=c(0, td$mean[2]))
         if(missing(ylab))
-        ylab <- "Cumulative income share time mean L(p)*mean"
+        ylab <- "Cumulative income share times mean L(p)*mean"
       }
     if(lor.type=="abs") {
       td$y <- td$abs.ordinates
