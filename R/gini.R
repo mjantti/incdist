@@ -47,53 +47,44 @@ gini.incdist <- function(x, ...)
                                         # this one now seems OK.
 #' @export
 gini.default <-
-  function(x, w = rep(1,length(x)), eta = 2, na.rm = TRUE,
-           data = NULL, ranked = x, no.negatives = FALSE,
-           type="ord",
-           absolute=ifelse(type=="absolute", TRUE, FALSE), ...)
-{
-  ## attach a possible data frame. Remember to detach it!
-  if(!is.null(data) & is.data.frame(data))
-      {
-          attach(data)
-          on.exit(detach(data))
-      }
-  ## moved treatment of NA's, missing values and others to utility function
-  ## "clean_income"
-  incmat <- clean_income(cbind(x, ranked), w,
-                         no.negatives = no.negatives, na.rm = na.rm)
-  x <- incmat[,1]
-  ranked <- incmat[,2]
-  w <- incmat[,3]
-  n <- length(x)
-  ## check if weights are probs or unit correspondences
-  ## not implemented and not really needed now.
-  ind <- order(ranked)
-  ranked <- ranked[ind]
-  x <- x[ind]
-  w <- w[ind]
-  w.tmp <- sum(w) - cumsum(w) + 1
-  mu <- weighted_mean(ranked, w)
-  ## or maybe I need to know here if weights are probs or freq weights?
-  r <- (c(w.tmp[1:(length(w.tmp)-1)], 0) + 1/2*w)/sum(w)
-  if(n > 100)
+    function(x, w = rep(1,length(x)), eta = 2, na.rm = TRUE,
+             data = NULL, ranked = x, no.negatives = FALSE,
+             type="ord",
+             absolute=ifelse(type=="absolute", TRUE, FALSE), ...)
     {
-      gini.m <- cov.wt(cbind(x, (1 - r)^(eta-1)),w)
-      ## does a concentration coefficient divide by the mean of x or
-      ## ranked? by ranked!
-      ret <- 2*gini.m$cov[1,2]/mu
-      names(ret) <- NULL
-    }
-  else
-    {
-      ret <- 1 + 1/sum(w) - 2*sum(w * w.tmp * x)/(sum(w)^2*mu)
-    }
-  ## there should probably be a finite sample correction here?
-  if(absolute) ret <- ret*mu
-  ## detach the data
-  ## if(!is.null(data) & is.data.frame(data))
-  ##  detach(data)
-  ret
+        ## attach a possible data frame. Remember to detach it!
+        if(!is.null(data) & is.data.frame(data)){
+            attach(data)
+            on.exit(detach(data))
+        }
+        incmat <- clean_income(cbind(x, ranked), w, no.negatives = no.negatives, na.rm = na.rm)
+        x <- incmat[,1]
+        ranked <- incmat[,2]
+        w <- incmat[,3]
+        n <- length(x)
+        ind <- order(ranked)
+        ranked <- ranked[ind]
+        x <- x[ind]
+        w <- w[ind]
+        mu <- weighted_mean(ranked, w)
+        ## NB: here are some details to work out, esp wrt to Davidson 2009 eq 5
+        w.tmp <- sum(w) - cumsum(w) + 1
+        ## or maybe I need to know here if weights are probs or freq weights?
+        ## NB: since I've revereset the weights, the coerreection is the same as in Davidson?
+        r <- (c(w.tmp[1:(length(w.tmp)-1)], 0) + 1/2*w)/sum(w)
+        if(n > 100){
+            gini.m <- cov.wt(cbind(x, (1 - r)^(eta-1)),w)
+                ## does a concentration coefficient divide by the mean of x or
+            ## ranked? by ranked!
+            ret <- 2*gini.m$cov[1,2]/mu
+            names(ret) <- NULL
+        }
+        else {
+            ret <- 1 + 1/sum(w) - 2*sum(w * w.tmp * x)/(sum(w)^2*mu)
+        }
+        ## there should probably be a finite sample correction here?
+        if(absolute) ret <- ret*mu
+        ret
 }
 #' @export
 concentration_coef <- function(x,  w = rep(1,length(x)), eta = 2, na.rm = TRUE,

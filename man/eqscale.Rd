@@ -50,12 +50,6 @@ id.0$eqscale <- list(formula = ~ (ad + k*ch)^d, coef=list(k=.8, d=.75),
 eqscale(id.0)
 
 }
-\references{
-
-}
-\seealso{
-
-}
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}
 }

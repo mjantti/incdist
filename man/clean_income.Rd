@@ -48,9 +48,6 @@ x <- cbind(x, y = rpois(length(x), 10))
 clean_income(x, w)
 
 }
-\references{
-
-}
 \seealso{
 \code{\link{complete.cases}}, \code{\link{na.omit}}
 }

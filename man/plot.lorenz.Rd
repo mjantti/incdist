@@ -61,9 +61,6 @@ correectly set.
 plot(lorenz(runif(100), q = 5))
 
 }
-\references{
-
-}
 \seealso{
 \code{\link{lorenz}}.
 }

@@ -28,9 +28,6 @@ measure be given.}
 
 \item{na.rm}{a logical indicating whether NA's should removed.}
 }
-\value{
-
-}
 \description{
 This function estimates the inequality indices (relative or absolute) of
 Kolm.

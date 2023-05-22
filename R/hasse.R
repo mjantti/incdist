@@ -9,7 +9,7 @@
 #' @param object A list of Lorenz curve objects.
 #' @param above.p Start comparison of this population fraction.
 #' @param lor.type For lorenz curves, gives the type of Lorenz curve.
-#' @param ... Additional argumens to dominates.lorenz or dominates.tip.
+#' @param ... Additional arguments to dominates.lorenz or dominates.tip.
 #' @return A plot.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{lorenz}}, \code{\link{tip}}.
@@ -19,10 +19,12 @@
 #'
 #' @examples
 #'
-#' lor.1 <- lorenz(rep(c(1, 2, 3, 4, 5), each=20))
-#' lor.2 <- lorenz(rep(c(1, 1, 3, 4, 6), each=20))
-#' lor.3 <- lorenz(rep(c(1.5, 2, 3, 4, 5.5), each=20))
-#' hasse(list("a"=lor.1, "b"=lor.2, "c"=lor.3))
+#' lor.1 <- lorenz(rep(c(3, 3, 3, 3, 3), each=20), q = FALSE)
+#' lor.2 <- lorenz(rep(c(1, 2, 3, 4, 5), each=20), q = FALSE)
+#' lor.3 <- lorenz(rep(c(1, 1, 3, 4, 6), each=20), q = FALSE)
+#' lor.4 <- lorenz(rep(c(1.5, 2, 3, 4, 5.5), each=20), q = FALSE)
+#' lor.5 <- lorenz(rep(c(1, 1, 1, 5, 7), each=20), q = FALSE)
+#' hasse(list("a"=lor.1, "b"=lor.2, "c"=lor.3, "d"=lor.4, "e"=lor.5))
 #'
 #'
 #' @importFrom relations relation
@@ -42,7 +44,7 @@ hasse <- function(object, above.p=.1, lor.type="ord", ...)
         ## tip
         dmat <- t(dominates.tip_list(object, above.p=above.p, ...))
     r <- relation(incidence=dmat)
-    plot(r)
+    plot(r, main = "")
 }
 
 ## this function takes a lorenz or tip list and plots the

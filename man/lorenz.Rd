@@ -111,6 +111,7 @@ lorenz(runif(10), q = FALSE)
 n <- 100
 income <- exp(10 + rnorm(n)*sqrt(2))
 weight <- rpois(n,7)
+lor <- lorenz(income, weight, p = c(0, .5, .7, .9, .98, 1))
 lor <- lorenz(income, weight, q = 5)
 plot(lor, main = "Lorenz curve")
 plot(lor, lor.type = "gen", main = "Generalized Lorenz curve")

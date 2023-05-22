@@ -28,10 +28,12 @@ the Lorenz curve comparisons.
 }
 \examples{
 
-lor.1 <- lorenz(rep(c(1, 2, 3, 4, 5), each=20))
-lor.2 <- lorenz(rep(c(1, 1, 3, 4, 6), each=20))
-lor.3 <- lorenz(rep(c(1.5, 2, 3, 4, 5.5), each=20))
-hasse(list("a"=lor.1, "b"=lor.2, "c"=lor.3))
+lor.1 <- lorenz(rep(c(3, 3, 3, 3, 3), each=20), q = FALSE)
+lor.2 <- lorenz(rep(c(1, 2, 3, 4, 5), each=20), q = FALSE)
+lor.3 <- lorenz(rep(c(1, 1, 3, 4, 6), each=20), q = FALSE)
+lor.4 <- lorenz(rep(c(1.5, 2, 3, 4, 5.5), each=20), q = FALSE)
+lor.5 <- lorenz(rep(c(1, 1, 1, 5, 7), each=20), q = FALSE)
+hasse(list("a"=lor.1, "b"=lor.2, "c"=lor.3, "d"=lor.4, "e"=lor.5))
 
 
 }

@@ -31,15 +31,8 @@ A scalar.
 This function estimates the Shorrocks income mobility index for a specific
 inequality indext
 }
-\examples{
-
-
-}
 \references{
 \insertRef{shorrocks1978jet}{incdist}
-}
-\seealso{
-
 }
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}

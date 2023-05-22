@@ -85,9 +85,6 @@ print(id.0)
 \references{
 \insertRef{lambert1993}{incdist}
 }
-\seealso{
-
-}
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}
 }

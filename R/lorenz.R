@@ -171,7 +171,8 @@ lorenz.default <- function(x, w = rep(1,length(x)),
     w <- incmat[,3]
     n <- length(x)
     retval <- list()
-    mu <- weighted_mean(x,w)
+    mu <- weighted_mean(x, w)
+    sx <- c(x %*% w)
     sigma2 <- weighted_var(x, w)
     if (!q) { # the microdataversion
         ind <- order(ranked)
@@ -179,7 +180,6 @@ lorenz.default <- function(x, w = rep(1,length(x)),
         w <- w[ind]
         wsum <- sum(w)
         p <- cumsum(w)/wsum
-        sx <- c(w %*% x)
         lorenz <- cumsum(w * x)/sx
         quantx <- NULL # needed later on
     }
@@ -189,9 +189,7 @@ lorenz.default <- function(x, w = rep(1,length(x)),
             warning("Few obs per class. You should probably reduce q!")
         ##h.quantx <- wtd.quantile(x, w, probs=seq(0,1,1/q), na.rm = na.rm)
         if(is.null(cutoffs))
-            quantx <- weighted_quantile(ranked, w,
-                                        probs=p,
-                                        na.rm = na.rm, names = FALSE)
+            quantx <- weighted_quantile(ranked, w, probs=p, na.rm = na.rm, names = FALSE)
         else  {
             if(length(cutoffs)!= q + 1)
                 stop("cutoffs must have length equal to q + 1")
@@ -204,22 +202,19 @@ lorenz.default <- function(x, w = rep(1,length(x)),
         cutsx <- cut(ranked, unique(quantx), labels = FALSE, right = FALSE,
                      include.lowest = TRUE)#, right=F)
         ## sometimes, these have too few (no support for all quantx)
-        ## and sometimes too many (weird!) elemets
+        ## and sometimes too many (weird!) elements
         ## try not having the "as.vector"
-        qmeanx <-
-            tapply(seq(along=x),cutsx,
-                   function(i, x1=x, w1=w)  weighted_mean(x1[i], w1[i]))
+        qmeanx <-tapply(seq(along=x), cutsx, function(i, x1=x, w1=w)  weighted_mean(x1[i], w1[i]))
         nqmeanx <- dimnames(qmeanx)[[1]]
         qmeanx <- as.vector(qmeanx)
-        qsumx <-
-            tapply(seq(along=x),cutsx,
-                   function(i, x1=x, w1=w) sum(x1[i] * w1[i]))
+        qsumx <- tapply(seq(along=x), cutsx, function(i, x1=x, w1=w) sum(x1[i] * w1[i]))
         nqsumx <- dimnames(qsumx)[[1]]
         qsumx <- as.vector(qsumx)
         ## I would probably want to duplicate the vector lorenz at
         ## the places where there were duplicate values of quantx.
         ## maybe generate this later?
-        ## lorenz <- cumsum(qsumx)/(x %*% w)
+        ## lorenz <- cumsum(qsumx)/sx
+        ## this is most likely where too many elements occur
         if(any(duplsx)) {
             warning("Some cut-off points duplicated!")
             dupl.index <- which(duplsx)
@@ -234,9 +229,10 @@ lorenz.default <- function(x, w = rep(1,length(x)),
                 tmp.qsumx <- c(tmp.qsumx[1:(i-1)],
                                tmp.qsumx[i-1],
                                tmp.qsumx[i:length(tmp.qsumx)])
-          }
-        qmeanx <- tmp.qmeanx
-        qsumx <- tmp.qsumx
+            }
+            qmeanx <- tmp.qmeanx
+            qsumx <- tmp.qsumx
+            if(length(qmeanx) > length(p)) warning("Producing too many quantile mean values")
     }
     ## missing elements in qmeanx or qsumx?
     if(length(qmeanx)<q) {
@@ -250,12 +246,12 @@ lorenz.default <- function(x, w = rep(1,length(x)),
             qmeanx <- tqmeanx
             qsumx <- tqsumx
         }
-    lorenz <- cumsum(qsumx)/c(x %*% w)
+    lorenz <- cumsum(qsumx)/sx
     ## the below is stupid
     ## p <- seq(0,1, len = q + 1)[2:(q+1)]
     ## is it OK to define these here?
     retval$quantile.means <- qmeanx
-    retval$quantile.shares <- qsumx/c(x %*% w)
+    retval$quantile.shares <- qsumx/sx
     }
     retval$q <- q
     retval$ordinates <- lorenz
@@ -370,8 +366,9 @@ as.data.frame.lorenz <- function(x, row.names, optional, ...)
   {
     object <- x
     if(!is.lorenz(object)) stop("Not a Lorenz curve!")
+    ## a problem with very highly concentrated data, work around by select only [1:k]
     k <- length(object$p)
-    ordinates <- c(0, object$ordinates)
+    ordinates <- c(0, object$ordinates[1:k])
     p <- c(0, object$p)
     ## change first element to a zero
     ## why? populate with the mean instead!
@@ -388,10 +385,10 @@ as.data.frame.lorenz <- function(x, row.names, optional, ...)
       }
     else  ## if based on grouped data
       {
-        quantile.means <- c(NA, object$quantile.means)
-        quantile.shares <- c(NA, object$quantile.shares)
+        quantile.means <- c(NA, object$quantile.means[1:k])
+        quantile.shares <- c(NA, object$quantile.shares[1:k])
         cut.offs <- object$cut.offs
-        quantile.groups <- paste(c("0", seq(along=object$quantile.means)))
+        quantile.groups <- paste(c("0", 1:k))
       }
     ret <-
       data.frame(p, ordinates, quantile.means, quantile.shares, cut.offs,
