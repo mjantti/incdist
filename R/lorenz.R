@@ -200,7 +200,7 @@ lorenz.default <- function(x, w = rep(1,length(x)),
         ## modified to take the unique cut points. Need to modify the
         ## lorenz curve if  there are duplicates.
         cutsx <- cut(ranked, unique(quantx), labels = FALSE, right = FALSE,
-                     include.lowest = TRUE)#, right=F)
+                     include.lowest = TRUE)#, right=F)q
         ## sometimes, these have too few (no support for all quantx)
         ## and sometimes too many (weird!) elements
         ## try not having the "as.vector"
@@ -210,48 +210,41 @@ lorenz.default <- function(x, w = rep(1,length(x)),
         qsumx <- tapply(seq(along=x), cutsx, function(i, x1=x, w1=w) sum(x1[i] * w1[i]))
         nqsumx <- dimnames(qsumx)[[1]]
         qsumx <- as.vector(qsumx)
-        ## I would probably want to duplicate the vector lorenz at
-        ## the places where there were duplicate values of quantx.
-        ## maybe generate this later?
-        ## lorenz <- cumsum(qsumx)/sx
-        ## this is most likely where too many elements occur
+        ## Need to generate qmeanx and qsumx vectors of length p
+        ## Scenarios where too few elements occur
+        ## 1. Lots of zeros (i.e., effective left censoring)
+        ## 2. "flat" regions on the middle
+        ## 3. Lots of max or near max values (effective right censoring)
         if(any(duplsx)) {
             warning("Some cut-off points duplicated!")
-            dupl.index <- which(duplsx)
-            ## tmp.lor <- lorenz
-            tmp.qmeanx <- qmeanx
-            tmp.qsumx <- qsumx
-            for(i in dupl.index) {
-                j <- i+1 # for lorenz curve, i for the others
-                tmp.qmeanx <- c(tmp.qmeanx[1:(i-1)],
-                                tmp.qmeanx[i-1],
-                                tmp.qmeanx[i:length(tmp.qmeanx)])
-                tmp.qsumx <- c(tmp.qsumx[1:(i-1)],
-                               tmp.qsumx[i-1],
-                               tmp.qsumx[i:length(tmp.qsumx)])
+            ## start with scenario 1 (the most likely)
+            ## dupl.index <- which(duplsx)
+            ## how to guard against 2 and 3?
+            ## note also that the coding is quite convoluted. This should be cleaned up!
+            ## work backwards, i.e., sort
+            tmp.qmeanx <- sort(qmeanx, decreasing = TRUE)
+            tmp.qsumx <- sort(qsumx, decreasing = TRUE)
+            tqmeanx <- tqsumx <- rep(0, q)
+            ## use tmp.qmeansx to fill in qmeanx from back to front
+            g <- 1
+            for(h in seq(along = qmeanx)){
+                tqmeanx[h] <- ifelse(h <= g, tmp.qmeanx[h], tmp.qmeanx[length(tmp.qmeanx)])
+                tqsumx[h] <- ifelse(h <= g, tmp.qsumx[h], tmp.qsumx[length(tmp.qsumx)])
+                g <- g + 1
             }
-            qmeanx <- tmp.qmeanx
-            qsumx <- tmp.qsumx
-            if(length(qmeanx) > length(p)) warning("Producing too many quantile mean values")
-    }
-    ## missing elements in qmeanx or qsumx?
-    if(length(qmeanx)<q) {
-        tqmeanx <- tqsumx <- rep(NA, q)
-        names(tqmeanx) <- names(tqsumx) <- paste(1:q)
-        ## return qmeanx, qsumx
-        for(i in intersect(names(tqmeanx), nqmeanx)){
-                    tqmeanx[i] <- qmeanx[i]
-                    tqsumx[i] <- qsumx[i]
-                }
-            qmeanx <- tqmeanx
-            qsumx <- tqsumx
+            ## now reverse again
+            qmeanx <- sort(tqmeanx, decreasing = FALSE)
+            qsumx <- sort(tqsumx, decreasing = FALSE)
+            ## reduce clutter
+            rm(tmp.qmeanx, tmp.qsumx, tqmeanx, tqsumx)
         }
-    lorenz <- cumsum(qsumx)/sx
-    ## the below is stupid
-    ## p <- seq(0,1, len = q + 1)[2:(q+1)]
-    ## is it OK to define these here?
-    retval$quantile.means <- qmeanx
-    retval$quantile.shares <- qsumx/sx
+        ## create the lorenz curve
+        lorenz <- cumsum(qsumx)/sx
+        ## the below is stupid
+        ## p <- seq(0,1, len = q + 1)[2:(q+1)]
+        ## is it OK to define these here?
+        retval$quantile.means <- qmeanx
+        retval$quantile.shares <- qsumx/sx
     }
     retval$q <- q
     retval$ordinates <- lorenz
