@@ -81,12 +81,11 @@ weighted_moment <- function(x,w,a=1, ranked=x, na.rm = FALSE) {
   weighted.mean(x^a,w, na.rm = na.rm)
 }
 #' @export
-weighted_mean <- function(x,w, na.rm = FALSE){
+weighted_mean <- function(x,w, na.rm = FALSE) {
     weighted.mean(x, w, na.rm)
 }
 #' @export
-weighted_var <- function(x, w, ranked=x, na.rm = FALSE)
-  {
+weighted_var <- function(x, w, ranked=x, na.rm = FALSE) {
     if(missing(w))
       {
         if(is.vector(x)) as.vector(cov.wt(as.matrix(x))$cov)
@@ -113,8 +112,7 @@ weighted_std <- function(x, w, ranked=x, na.rm = FALSE)
 #' @export
 weighted_quantile <-
   function(x, w = rep(1, length(x)),
-           probs = seq(0, 1, 0.25), ranked=x, na.rm = FALSE, names = TRUE)
-  {
+           probs = seq(0, 1, 0.25), ranked=x, na.rm = FALSE, names = TRUE)  {
     ## call wtd.quantile
     wtd.quantile(x, w, probs, na.rm=na.rm)
     ##weighted_quantile.1(x, w, probs, na.rm=na.rm)
@@ -134,9 +132,7 @@ weighted_median <- function(x, w, ranked=x, na.rm = FALSE, ...) {
 
 
 #' @export
-weighted_crosstable <- function(x1, x2, w1 = rep(1, length(x1)))
-{
-
+weighted_crosstable <- function(x1, x2, w1 = rep(1, length(x1))){
   ## error checks: are factors, do weights exist, at least
   y <- tapply(seq(along=w1), list(x1, x2),
               function(i, w = w1) sum(w[i]))
@@ -180,11 +176,9 @@ clean_income <- function(x, w = rep(1,length(x)),
                          no.negatives = FALSE,
                          no.nans = TRUE,
                          no.infinites = TRUE,
-                         na.rm = TRUE)
-  {
+                         na.rm = TRUE) {
     if(is.matrix(x)) k <- ncol(x)
-    else
-      {
+    else {
         k <- 1
         x <- as.matrix(x)
         colnames(x) <- "x"
@@ -197,31 +191,25 @@ clean_income <- function(x, w = rep(1,length(x)),
     ## this is a little tricky, since the restriction should
     ## *really* be that either all(x) > 0 or all(x)<0
     ## should this assume x is a matrix or scalar, or be better tuned?
-    if(no.negatives)
-      {
-        if(any(colMeans(df[,-1, drop=FALSE], na.rm=TRUE)>0) && any(df<0))
-           {
+    if(no.negatives) {
+        if(any(colMeans(df[,-1, drop=FALSE], na.rm=TRUE)>0) && any(df<0)) {
              negs <- apply(df < 0, 2, sum)
              df <- replace(df, df < 0, NA)
            }
-        if(any(colMeans(df[,-1, drop=FALSE], na.rm=TRUE)<0) && any(df>0))
-           {
+        if(any(colMeans(df[,-1, drop=FALSE], na.rm=TRUE)<0) && any(df>0)) {
              negs <- apply(df > 0, 2, sum)
              df <- replace(df, df > 0, NA)
            }
       }
-    if(no.infinites)
-      {
+    if(no.infinites) {
         infs <- apply(is.infinite(df), 2, sum)
         df <- replace(df, is.infinite(df), NA)
       }
-    if(no.nans)
-      {
+    if(no.nans) {
         nans <- apply(is.nan(df), 2, sum)
         df <- replace(df, is.nan(df), NA)
       }
-    if(na.rm)
-      {
+    if(na.rm) {
         ind <- complete.cases(df)
         df <- df[ind,, drop = FALSE]
       }
@@ -247,7 +235,7 @@ clean_income <- function(x, w = rep(1,length(x)),
 #' @references
 #' \insertRef{cowellandflachaire2015}{incdist}
 #' @export
-ineqvar <- function(x, w, ranked=x, na.rm = FALSE, index="gini",...){
+ineqvar <- function(x, w, ranked=x, na.rm = FALSE, index="gini",...) {
     if (missing(w))
         w <- rep(1, length(x))
     n <- length(x)
