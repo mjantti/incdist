@@ -63,23 +63,20 @@ plot.lorenz <- function(x, add = FALSE, lor.type = "ord",
   if(missing(xlab))
     xlab <- "Population share p"
   ## the standard case
-  if(lor.type=="ord" & !diff)
-    {
+  if(lor.type=="ord" & !diff) {
       td$y <- td$ordinates
       td1 <- data.frame(p=c(0, 1), y=c(0, 1))
       if(missing(ylab))
         ylab <- "Cumulative income share L(p)"
     }
-  if(lor.type=="ord" & diff)
-    {
+  if(lor.type=="ord" & diff) {
       td$y <- td$ordinates - td$p
       td1 <- data.frame(p=c(0, 1), y=c(0, 0))
       tyend <- 1
   if(missing(ylab) & diff)
     ylab <- "Cumulative income share - diagonal p - L(p)"
     }
-  if(lor.type=="gen")
-    {
+  if(lor.type=="gen") {
       td$y <- td$gl.ordinates
       td1 <- data.frame(p=c(0, 1), y=c(0, td$mean[2]))
       tyend <- td$mean[2]
@@ -117,22 +114,19 @@ plot.lorenz.defunct <-
   if(missing(xlab))
     xlab <- "Population share"
     ## the standard case
-  if(lor.type=="ord" & !diff)
-    {
+  if(lor.type=="ord" & !diff) {
       td$y <- td$ordinates
       td1 <- data.frame(p=c(0, 1), y=c(0, 1))
       if(missing(ylab))
         ylab <- "Cumulative income share L(p)"
     }
-  if(lor.type=="ord" & diff)
-    {
+  if(lor.type=="ord" & diff) {
       td$y <- td$ordinates - td$p
       td1 <- data.frame(p=c(0, 1), y=c(0, 0))
       if(missing(ylab) & diff)
         ylab <- "Cumulative income share - diagonal p - L(p)"
     }
-  if(lor.type=="gen")
-    {
+  if(lor.type=="gen") {
       td$y <- td$gl.ordinates
       td1 <- data.frame(p=c(0, 1), y=c(0, td$mean[2]))
       if(missing(ylab))
@@ -186,22 +180,19 @@ plot.lorenz_list <-  function(x, add = FALSE, lor.type = "ord",
     if(missing(xlab))
       xlab <- "Population share p"
     ## the standard case
-    if(lor.type=="ord" & !diff)
-      {
+    if(lor.type=="ord" & !diff) {
         td$y <- td$ordinates
         td1 <- data.frame(p=c(0, 1), y=c(0, 1))
         if(missing(ylab))
           ylab <- "Cumulative income share L(p)"
       }
-    if(lor.type=="ord" & diff)
-      {
+    if(lor.type=="ord" & diff) {
         td$y <- td$ordinates - td$p
         td1 <- data.frame(p=c(0, 1), y=c(0, 0))
         if(missing(ylab) & diff)
           ylab <- "Cumulative income share - diagonal p - L(p)"
       }
-    if(lor.type=="gen")
-      {
+    if(lor.type=="gen") {
         td$y <- td$gl.ordinates
         td1 <- data.frame(p=c(0, 1), y=c(0, td$mean[2]))
         if(missing(ylab))
@@ -260,20 +251,17 @@ plot.lorenz_incdist <-  function(x, add = FALSE, lor.type = "ord",
     if(missing(xlab))
       xlab <- "Population share p"
     ## the standard case
-    if(lor.type=="ord" & !diff)
-      {
+    if(lor.type=="ord" & !diff) {
         td$y <- td$ordinates
         if(missing(ylab))
           ylab <- "Cumulative income share L(p)"
       }
-    if(lor.type=="ord" & diff)
-      {
+    if(lor.type=="ord" & diff) {
         td$y <- td$ordinates - td$p
         if(missing(ylab) & diff)
           ylab <- "Cumulative income share - diagonal p - L(p)"
       }
-    if(lor.type=="gen")
-      {
+    if(lor.type=="gen") {
         td$y <- td$gl.ordinates
         if(missing(ylab))
         ylab <- "Cumulative income share time mean L(p)*mean"

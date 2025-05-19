@@ -56,14 +56,12 @@
 #'
 #' @export
 
-tip <- function(x, ...)
-  {
+tip <- function(x, ...) {
     UseMethod("tip", x)
   }
 
 #' @export
-cpg <- function(x, ...)
-  {
+cpg <- function(x, ...) {
     tip(x, ...)
   }
 
@@ -80,8 +78,7 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
                         na.rm = TRUE, ...)
 {
   ## attach a possible data frame. Remember to detach it!
-  if(!is.null(data) & is.data.frame(data))
-      {
+  if(!is.null(data) & is.data.frame(data)) {
           attach(data)
           on.exit(detach(data))
         }
@@ -130,15 +127,13 @@ tip.default <- function(x, w = rep(1,length(x)), q = 20, data = NULL,
     tip <- c(0,cumsum(qsumx)/sum(w))
     ## see above: do not divide by /(gap %*% w))
     ## handle duplicates
-     if(any(duplsx))
-      {
+     if(any(duplsx)) {
         warning("Some cut-off points duplicated!")
         dupl.index <- which(duplsx)
         tmp.tip <- tip
         tmp.qmeanx <- qmeanx
         tmp.qsumx <- qsumx
-        for(i in dupl.index)
-          {
+        for(i in dupl.index) {
             j <- i+1 # for lorenz curve, i for the others
             tmp.tip <- c(tmp.tip[1:(i-1)],
                          tmp.tip[i-1],
@@ -211,8 +206,7 @@ print.sum.tip <- function(x, ...){
 
 ## as.data.frame
 
-as.data.frame.tip <- function(x, row.names, optional, ...)
-  {
+as.data.frame.tip <- function(x, row.names, optional, ...) {
     object <- x
     if(!is.tip(object)) stop("Not a TIP curve!")
     k <- length(object$p)
@@ -231,8 +225,7 @@ as.data.frame.tip <- function(x, row.names, optional, ...)
 ## a function to convert a list of lorenz curves into a dataset
 #' @export as.data.frame.tip_list
 #' @export
-as.data.frame.tip_list <- function(x, row.names, optional, ...)
-  {
+as.data.frame.tip_list <- function(x, row.names, optional, ...) {
     obj <- x
     if(!is.list(obj))
       stop("Object is not a list!")
@@ -253,8 +246,7 @@ as.data.frame.tip_list <- function(x, row.names, optional, ...)
 #' @export dominates.tip
 #' @export
 dominates.tip <-  function(x, y, rep.num=TRUE,
-                           above.p=FALSE)
-  {
+                           above.p=FALSE) {
     if(!is.tip(x)||!is.tip(y)) stop("Not a Tip curve!")
     ## based on micro.data?
     if(!x$q || !y$q) stop("Not implemented yet for micro data!")
@@ -263,14 +255,12 @@ dominates.tip <-  function(x, y, rep.num=TRUE,
     ## drop the first one
     diff <- diff[-1]
     ## copied from dominates.lorenz
-    if(rep.num==TRUE)
-      {
+    if(rep.num==TRUE) {
         if(all(diff >= 0)) ret <- TRUE
         ##if((any(diff > 0) && any(diff < 0)) || all(diff == 0)) ret <- NA
         if(!all(diff >= 0)) ret <- FALSE
       }
-    if(rep.num=="tex")
-      {
+    if(rep.num=="tex") {
         if(any(diff > 0) && !any(diff < 0)) ret <- "$<$"
         if((any(diff > 0) && any(diff < 0)) || all(diff == 0)) ret <- "$\\sim$"
         if(!any(diff > 0) && any(diff < 0)) ret <- "$>$"
@@ -280,21 +270,18 @@ dominates.tip <-  function(x, y, rep.num=TRUE,
 
 #' @export dominates.tip_list
 #' @export
-dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...)
-  {
+dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...) {
     if(!is.list(object))
       stop("Object is not a list!")
     if(!all(sapply(object, is.tip)))
       stop("Some element  is not a Tip curve!")
     k <- length(object)
     ret <- matrix(FALSE, ncol = k, nrow = k)
-    if(!is.null(names(object)))
-      {
+    if(!is.null(names(object))) {
         rownames(ret) <- names(object)
         colnames(ret) <- names(object)
       }
-    else
-      {
+    else {
         rownames(ret) <- paste(1:k)
         colnames(ret) <- paste(1:k)
       }
@@ -348,8 +335,7 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
         frm <- eqscale(object)
     # 0. the top level statistics
     if(length(panames)) frm.list <- split(frm, frm[[panames]])
-    else
-      {
+    else {
         frm.list <- list()
         frm.list[[1]] <- frm
       }
@@ -359,11 +345,9 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
     ## sumw to hold sum of weights
     ## must be done here
     ret.y <- n <- sumw <- list() ##ret.y{i:group}{l:partition}
-    for(i in 1:(1+length(grl)))
-        {
+    for(i in 1:(1+length(grl))) {
           ret.y[[i]] <- n[[i]] <- sumw[[i]] <- list()
-          for(l in 1:length(frm.list))
-              {
+          for(l in 1:length(frm.list)) {
                 ret.y[[i]][[l]] <- n[[i]][[l]] <- sumw[[i]][[l]] <- NA
               }
           names(ret.y[[i]]) <- names(n[[i]]) <- names(sumw[[i]]) <- pal
@@ -390,10 +374,8 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
     ##     names(ret.x) <- incnames
     ##   }
     ## start doing the work
-    for(l in 1:length(frm.list)) ## l indexes partitions
-      {
-        if(length(grnames))
-          {
+    for(l in 1:length(frm.list)) ## l indexes partitions {
+        if(length(grnames)) {
             count.grnames <- c(dim(frm.list[[l]])[1],
                                table(frm.list[[l]][[grnames]]))
             frm.list.l <- split(frm.list[[l]],
@@ -403,21 +385,18 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
                                 as.factor(frm.list[[l]][[grnames]]))
             frm.list.l <- c(list(frm.list[[l]]), frm.list.l)
           }
-        else
-          {
+        else {
             frm.list.l <- list(frm.list[[l]])
             count.grnames <- dim(frm.list[[l]])[1]
           }
         ## this used to be (??)
         ## i indexes groups present. The first is all.
-        for(i in 1:(1+length(grl)))
-          {
+        for(i in 1:(1+length(grl))) {
             doing.name <- grnames[i]
             ## must add some code here to
             ## a. check if every i has a dataframe in frm.list.l
             ## b. if not, create an empty data frame for those
-            if(count.grnames[i] == 0)
-              {
+            if(count.grnames[i] == 0) {
                 frm.list.l[[i]] <- subset(frm.list[[l]], T)
                 if(attr(income, "response"))
                   y <- 0
@@ -431,8 +410,7 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
             else {
               y <- NULL
             }
-            if(length(incnames))
-              {
+            if(length(incnames)) {
                 x <- as.matrix(frm.list.l[[i]][, incnames])
                 if (length(incnames) == dim(x)[2])
                   dimnames(x) <- list(NULL, incnames)
@@ -494,8 +472,7 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
 #' @export as.data.frame.tip_incdist
 #' @export
 as.data.frame.tip_incdist <-
-    function(x, ...)
-    {
+    function(x, ...) {
         obj <- x
         if(!is.list(obj))
           stop("Object is not a list!")
@@ -504,8 +481,7 @@ as.data.frame.tip_incdist <-
         gs <- names(obj)
         tdl.top <-
             lapply(gs,
-                   function(x)
-                     {
+                   function(x) {
                        ids <- names(obj[[x]])
                        ret <- lapply(obj[[x]], as.data.frame.tip)
                        k <- sapply(ret, function(x) dim(x)[1])

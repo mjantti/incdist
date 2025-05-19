@@ -33,14 +33,12 @@
 #' gini(runif(20), rpois(20, 5), eta = 2)
 #'
 #' @export
-gini <- function(x, ...)
-  {
+gini <- function(x, ...) {
   if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("gini", x)
 }
 #' @export
-gini.incdist <- function(x, ...)
-  {
+gini.incdist <- function(x, ...) {
     inequality.incdist(x, type = "gini", ...)
   }
 
@@ -50,8 +48,7 @@ gini.default <-
     function(x, w = rep(1,length(x)), eta = 2, na.rm = TRUE,
              data = NULL, ranked = x, no.negatives = FALSE,
              type="ord",
-             absolute=ifelse(type=="absolute", TRUE, FALSE), ...)
-    {
+             absolute=ifelse(type=="absolute", TRUE, FALSE), ...) {
         ## attach a possible data frame. Remember to detach it!
         if(!is.null(data) & is.data.frame(data)){
             attach(data)

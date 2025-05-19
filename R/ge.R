@@ -33,8 +33,7 @@
 ge <- function(x, w = rep(1,length(x)), eta = 2,
                data = NULL,  ranked=x, na.rm = TRUE,...){
   ## attach a possible data frame. Remember to detach it!
-  if(!is.null(data) & is.data.frame(data))
-      {
+  if(!is.null(data) & is.data.frame(data)) {
           attach(data)
           on.exit(detach(data))
       }

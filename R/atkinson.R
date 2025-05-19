@@ -27,10 +27,9 @@
 #' @export atkinson
 atkinson <-
   function(x, w = rep(1,length(x)), eta = 1/2, data = NULL, na.rm = TRUE,
-            no.negatives = FALSE, ...){
+            no.negatives = FALSE, ...) {
   ## attach a possible data frame. Remember to detach it!
-  if(!is.null(data) & is.data.frame(data))
-      {
+  if(!is.null(data) & is.data.frame(data)) {
           attach(data)
           on.exit(detach(data))
       }
@@ -41,8 +40,7 @@ atkinson <-
   w <- incmat[,2]
   #retval <- list()
   m <- weighted_mean(x,w)
-  if (eta == 1)
-    {
+  if (eta == 1) {
       ## geom.mean <- function(x, w){
       ##   sumw <- sum(w)
       ##   gm <- prod(w * x)^(1/sumw)
@@ -50,9 +48,7 @@ atkinson <-
       ## edei <- geom.mean(x, w)
       edei <- exp(weighted_mean(log(x), w))
       retval <- 1 - edei/m
-    }
-  else
-    {
+    }  else {
       edei <- weighted_mean(x^(1-eta),w)
       retval <- 1 - edei^(1/(1-eta))/m
     }

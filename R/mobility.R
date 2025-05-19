@@ -59,11 +59,9 @@ fields <- function(x, w = rep(1,dim(x)[1]), data = list(), na.rm=TRUE) {
 
 shorrocks <- function(x, w = rep(1,dim(x)[1]),
                       data = NULL, na.rm = TRUE,
-                      index = "gini", ...)
-{
+                      index = "gini", ...) {
     ## attach a possible data frame. Remember to detach it!
-    if(!is.null(data) & is.data.frame(data))
-    {
+    if(!is.null(data) & is.data.frame(data)) {
         attach(data)
         on.exit(detach(data))
     }
@@ -125,8 +123,7 @@ shorrocks <- function(x, w = rep(1,dim(x)[1]),
 #' @export mob_mat
 
 mob_mat <-
-  function(x1, x2, w, Q1 = NULL, Q2 = NULL, q = 5, labels = FALSE)
-{
+  function(x1, x2, w, Q1 = NULL, Q2 = NULL, q = 5, labels = FALSE) {
   n01 <- length(x1)
   n02 <- length(x2)
   if (n01 != n02)
@@ -158,8 +155,7 @@ mob_mat <-
 
 ## matrix mobility measures. move these soon (ha!) to package incdist
 ## these are for mobility (i.e., conditional) matrices
-mtr <- function(mat, ...)
-  {
+mtr <- function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -167,8 +163,7 @@ mtr <- function(mat, ...)
     ret
   }
 
-mdet <- function(mat, ...)
-  {
+mdet <- function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -176,16 +171,14 @@ mdet <- function(mat, ...)
     ret
   }
 
-ml <- function(mat, ...)
-  {
+ml <- function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
     ret <- 1 - abs(eigen(mat, only.values = TRUE)$values[2])
     ret
   }
-mf <-  function(mat, ...)
-  {
+mf <-  function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -194,8 +187,7 @@ mf <-  function(mat, ...)
     ret
   }
 
-mb <-  function(mat, vec, ...)
-  {
+mb <-  function(mat, vec, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -208,8 +200,7 @@ mb <-  function(mat, vec, ...)
     ret
   }
 ## rewrite in terms of the (unconditional) frequencies for the real data
-mmtr <- function(mat, ...)
-  {
+mmtr <- function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -218,8 +209,7 @@ mmtr <- function(mat, ...)
     ret
   }
 
-mmdet <- function(mat, ...)
-  {
+mmdet <- function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -228,8 +218,7 @@ mmdet <- function(mat, ...)
     ret
   }
 
-mml <- function(mat, ...)
-  {
+mml <- function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -237,8 +226,7 @@ mml <- function(mat, ...)
     ret <- 1 - abs(eigen(mat, only.values = TRUE)$values[2])
     ret
   }
-mmf <-  function(mat, ...)
-  {
+mmf <-  function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")
@@ -248,8 +236,7 @@ mmf <-  function(mat, ...)
     ret
   }
 
-mmb <-  function(mat, ...)
-  {
+mmb <-  function(mat, ...) {
     if(!is.matrix(mat)) stop("argument is not a matrix!")
     k <- dim(mat)
     if(k[1] != k[2]) stop("Not a square matrix!")

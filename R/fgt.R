@@ -56,8 +56,7 @@ fgt <-
             na.rm = TRUE)
 {
    ## attach a possible data frame. Remember to detach it!
-  if(!is.null(data) & is.data.frame(data))
-      {
+  if(!is.null(data) & is.data.frame(data)) {
           attach(data)
           on.exit(detach(data))
       }
@@ -89,17 +88,14 @@ fgt <-
   retval
 }
 #' @export
-fgt0 <- function(...)
-    {
+fgt0 <- function(...) {
         fgt(...)$fgt
     }
 #' @export
-fgt1 <- function(...)
-    {
+fgt1 <- function(...) {
         fgt(alpha=1, ...)$fgt
     }
 #' @export
-fgt2 <- function(...)
-    {
+fgt2 <- function(...) {
         fgt(alpha=2, ...)$fgt
     }

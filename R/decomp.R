@@ -30,10 +30,8 @@
 #' @export
 decomp_groups <- function(x, w = rep(1,length(x)), eta = 2,
                data = NULL,  ranked=x, na.rm = TRUE, group=NULL, func="ge",
-                          ...)
-  {
-      if(!is.null(data) & is.data.frame(data))
-      {
+                          ...) {
+      if(!is.null(data) & is.data.frame(data)) {
           attach(data)
           on.exit(detach(data))
       }

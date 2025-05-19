@@ -1,5 +1,5 @@
 #
-integrate.locfit <- function(x, y, ...){
+integrate.locfit <- function(x, y, ...) {
   n <- length(x)
   x <- sort(x)
   dx <- x[2:n] - x[1:n-1]
@@ -16,7 +16,7 @@ integrate.locfit <- function(x, y, ...){
 ## why on earth is this here?
 "trace.plot" <-
     function(x, y, g, data = sys.parent(),
-             add = FALSE, col = "black", ...){
+             add = FALSE, col = "black", ...) {
         g <- factor(g)
         dfr <- na.omit(data.frame(x=x,y=y,g=g))
         dfr <- dfr[order(dfr$g,dfr$x),]
@@ -86,13 +86,11 @@ weighted_mean <- function(x,w, na.rm = FALSE) {
 }
 #' @export
 weighted_var <- function(x, w, ranked=x, na.rm = FALSE) {
-    if(missing(w))
-      {
+    if(missing(w)) {
         if(is.vector(x)) as.vector(cov.wt(as.matrix(x))$cov)
         else diag(cov.wt(as.matrix(x))$cov)
       }
-    else
-      {
+    else {
         if (na.rm) {
           i <- !is.na(x) & !is.na(w)
           w <- w[i]
@@ -132,7 +130,7 @@ weighted_median <- function(x, w, ranked=x, na.rm = FALSE, ...) {
 
 
 #' @export
-weighted_crosstable <- function(x1, x2, w1 = rep(1, length(x1))){
+weighted_crosstable <- function(x1, x2, w1 = rep(1, length(x1))) {
   ## error checks: are factors, do weights exist, at least
   y <- tapply(seq(along=w1), list(x1, x2),
               function(i, w = w1) sum(w[i]))

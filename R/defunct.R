@@ -8,8 +8,7 @@ weighted_quantile_2 <-
     #   + a test sum(w) > length(x)??????
     if (length(x) != length(w))
       stop("Weights and variable vectors are of unequal length!")
-    if (na.rm)
-      { valid.obs <- !is.na(x) & !is.na(w)
+    if (na.rm) { valid.obs <- !is.na(x) & !is.na(w)
         x <- x[valid.obs]
         w <- w[valid.obs]}
     else if (any(is.na(x)) | any(is.na(w)))
@@ -67,8 +66,7 @@ weighted_quantile_defunct <-
   if (missing(w)) quantile(x, probs, na.rm, names)
   else if (length(x) != length(w))
     stop("Weights and variable vectors are of unequal length!")
-  if (na.rm)
-    { valid.obs <- !is.na(x) & !is.na(w)
+  if (na.rm) { valid.obs <- !is.na(x) & !is.na(w)
       x <- x[valid.obs]
       w <- w[valid.obs]}
   else if (any(is.na(x)) | any(is.na(w)))
@@ -107,8 +105,7 @@ weighted_quantile_1 <-
 {
   if(missing(w))
     quantile(x, probs = seq(0, 1, 0.25), na.rm = FALSE, names = TRUE)
-  else
-    {
+  else {
       # this is *incredibly* inefficient!
       # make w an integer, if not already
       # should test if any of the weights are not integers first
@@ -120,8 +117,7 @@ weighted_quantile_1 <-
       quantile(x, probs, na.rm = FALSE, names = TRUE) }
 }
 
-weighted_sum <- function(x, w, ranked=x, na.rm = FALSE)
-  {
+weighted_sum <- function(x, w, ranked=x, na.rm = FALSE) {
   if (missing(w))
     w <- rep(1, length(x))
   if (na.rm) {
@@ -230,24 +226,20 @@ weighted_crosstable_old <- function(l, w1 = rep(1, length(l[[1]])))
 
 ## two sample test
 
-distdiff <- function(df1, df2, income, weight=NULL, stat, B=1000)
-    {
+distdiff <- function(df1, df2, income, weight=NULL, stat, B=1000) {
         n1 <- dim(df1)[1]
         n2 <- dim(df2)[1]
         n <- n1 + n2
         df <- rbind(df1, df2)
         res <- vector(mode="numeric", length=B)
-        for(b in 1:B)
-            {
+        for(b in 1:B) {
                 ndf1 <- df[sample(1:n, n1, replace=TRUE),]
                 ndf2 <- df[sample(1:n, n2, replace=TRUE),]
-                if(!is.null(weight))
-                    {
+                if(!is.null(weight)) {
                         wgt1 <- ndf1[[weight]]
                         wgt2 <- ndf2[[weight]]
                     }
-                else
-                    {
+                else {
                         wgt1 <- rep(1, n1)
                         wgt2 <- rep(1, n2)
                     }

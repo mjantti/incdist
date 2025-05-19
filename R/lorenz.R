@@ -139,11 +139,9 @@ lorenz.default <- function(x, w = rep(1,length(x)),
                            cov = FALSE,
                            no.negatives = FALSE,
                            cutoffs = NULL,
-                           ...)
-{
+                           ...) {
     ## attach a possible data frame. Remember to detach it!
-    if(!is.null(data) & is.data.frame(data))
-      {
+    if(!is.null(data) & is.data.frame(data)) {
           attach(data)
           on.exit(detach(data))
       }
@@ -249,7 +247,7 @@ lorenz.default <- function(x, w = rep(1,length(x)),
     retval$q <- q
     retval$ordinates <- lorenz
     ## drop the lowest unless these are microdata
-    if (!q){
+    if (!q) {
         retval$p <- p
     }
     else {
@@ -269,10 +267,10 @@ lorenz.default <- function(x, w = rep(1,length(x)),
     ##  detach(data)
     ## start calculating the covariance matrices, if requested
     retval$variances <- NULL
-    if(cov){
+    if(cov) {
         if(!q)
             warning("Cannot calculate the variance for microdata!")
-        else  {
+        else {
             object <- structure(retval, class = "lorenz")
             retval$variances <- var_lor(object)
         }
@@ -283,8 +281,7 @@ lorenz.default <- function(x, w = rep(1,length(x)),
 ## lorenz for a locfit density object
 #' @export lorenz.locfit
 #' @export
-lorenz.locfit <- function(x, ...)
-{
+lorenz.locfit <- function(x, ...) {
   if(!inherits(x, "locfit")) stop("Not a locfit object!")
   ## I want to generate the empirical CDF from the object
   ## should I use the data points or the
@@ -327,7 +324,7 @@ summary.lorenz <- function(x, ...)
   structure(x, class = c("summary.lorenz", class(object)))
 
 #' @export
-print.summary.lorenz <- function(x, ...){
+print.summary.lorenz <- function(x, ...) {
   q <- length(x$p)
   cat("Lorenz curve at ", q, " points.\n")
   cat("Overall mean: ", format(x$mean, ...), "\n")
@@ -342,8 +339,7 @@ print.summary.lorenz <- function(x, ...){
 }
 
 #' @export
-print.lorenz <- function(x, ...)
-  {
+print.lorenz <- function(x, ...) {
     object <- x
     if(!is.lorenz(object)) stop("Not a Lorenz curve!")
     cat("Lorenz curve at ", length(object$p), " points.\n")
@@ -355,8 +351,7 @@ print.lorenz <- function(x, ...)
 ## an as.data.frame method
 #' @export as.data.frame.lorenz
 #' @export
-as.data.frame.lorenz <- function(x, row.names, optional, ...)
-  {
+as.data.frame.lorenz <- function(x, row.names, optional, ...) {
     object <- x
     if(!is.lorenz(object)) stop("Not a Lorenz curve!")
     ## a problem with very highly concentrated data, work around by select only [1:k]
@@ -372,12 +367,10 @@ as.data.frame.lorenz <- function(x, row.names, optional, ...)
     ## add the GL and the AL ordinates
     gl.ordinates <- mean*ordinates
     abs.ordinates <- (ordinates - p)*mean
-    if(!object$q)
-      {
+    if(!object$q) {
           quantile.means <-  quantile.shares <- cut.offs <- quantile.groups <- rep(NA, k+1)
       }
-    else  ## if based on grouped data
-      {
+    else { ## if based on grouped data
         quantile.means <- c(NA, object$quantile.means[1:k])
         quantile.shares <- c(NA, object$quantile.shares[1:k])
         cut.offs <- object$cut.offs
@@ -394,8 +387,7 @@ as.data.frame.lorenz <- function(x, row.names, optional, ...)
 ## a function to convert a list of lorenz curves into a dataset
 #' @export as.data.frame.lorenz_list
 #' @export
-as.data.frame.lorenz_list <- function(x, row.names, optional, ...)
-  {
+as.data.frame.lorenz_list <- function(x, row.names, optional, ...) {
     obj <- x
     if(!is.list(obj))
       stop("Object is not a list!")
@@ -416,27 +408,22 @@ as.data.frame.lorenz_list <- function(x, row.names, optional, ...)
 #' @export dominates.lorenz
 #' @export
 dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
-                             above.p=FALSE, ...)
-  {
+                             above.p=FALSE, ...) {
     if(!is.lorenz(x)||!is.lorenz(y)) stop("Not a Lorenz curve!")
     ## based on micro.data?
     microdata <- FALSE
     if(!x$q || !y$q) microdata <- TRUE
     if(x$q != y$q) stop("x and y of unequal lengths!")
-    if(microdata)
-      {
-        if(lor.type=="ord")
-          {
+    if(microdata) {
+        if(lor.type=="ord") {
             lx <- x$ordinates
             ly <- y$ordinates
            }
-        if(lor.type=="gen")
-          {
+        if(lor.type=="gen") {
             lx <- x$ordinates*x$mean
             ly <- y$ordinates*y$mean
            }
-        if(lor.type=="abs")
-          {
+        if(lor.type=="abs") {
             lx <- (x$ordinates-x$p)*x$mean
             ly <- (y$ordinates-y$p)*y$mean
            }
@@ -457,20 +444,16 @@ dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
         tc[is.na(tc)] <- names(px)
         names(lly) <- tc
         ## interpolate
-        for(i in seq(along=llx))
-          {
-            if(i==1)
-              {
+        for(i in seq(along=llx)) {
+            if(i==1) {
                 llx[i] <- ifelse(is.na(llx[i]), 0, llx[i])
                 lly[i] <- ifelse(is.na(lly[i]), 0, lly[i])
               }
-            if(i==length(llx))
-              {
+            if(i==length(llx)) {
                 llx[i] <- ifelse(is.na(llx[i]), llx[i-1], 1)
                 lly[i] <- ifelse(is.na(lly[i]), lly[i-1], 1)
               }
-            if(i>1 && i<length(llx))
-              {
+            if(i>1 && i<length(llx)) {
                 llx[i] <- ifelse(is.na(llx[i]), llx[i-1], llx[i])
                 lly[i] <- ifelse(is.na(lly[i]), lly[i-1], lly[i])
               }
@@ -478,12 +461,10 @@ dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
         diff <- llx-lly
         if(above.p) diff <- diff[pxy>above.p]
       }
-    else
-      {
+    else {
           q <- length(x$ordinates)
           omit.these <- 1
-          if(lor.type=="ord")
-              {
+          if(lor.type=="ord") {
                   diff <- x$ordinates - y$ordinates
                   omit.these <- c(1,q)
               }
@@ -493,14 +474,12 @@ dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
               diff <- (x$ordinates - x$p)*x$mean - (y$ordinates - y$p)*y$mean
           diff <- diff[-omit.these]
       }
-    if(rep.num==TRUE)
-      {
+    if(rep.num==TRUE) {
         if(all(diff >= 0)) ret <- TRUE
         ##if((any(diff > 0) && any(diff < 0)) || all(diff == 0)) ret <- NA
         if(!all(diff >= 0)) ret <- FALSE
       }
-    if(rep.num=="tex")
-      {
+    if(rep.num=="tex") {
         if(any(diff > 0) && !any(diff < 0)) ret <- "$<$"
         if((any(diff > 0) && any(diff < 0)) || all(diff == 0)) ret <- "$\\sim$"
         if(!any(diff > 0) && any(diff < 0)) ret <- "$>$"
@@ -512,8 +491,7 @@ dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
 #' @export
 dominates.lorenz_list <-
   function(x, symmetric=FALSE,
-           lor.type="ord", rep.num=TRUE, above.p=FALSE, ...)
-{
+           lor.type="ord", rep.num=TRUE, above.p=FALSE, ...) {
     object <- x
     if(!is.list(object))
       stop("Object is not a list!")
@@ -522,13 +500,11 @@ dominates.lorenz_list <-
     k <- length(object)
     ret <- matrix(FALSE, ncol = k, nrow = k)
     ## give rows and labels names
-    if(!is.null(names(object)))
-      {
+    if(!is.null(names(object))) {
         rownames(ret) <- names(object)
         colnames(ret) <- names(object)
       }
-    else
-      {
+    else {
         rownames(ret) <- paste(1:k)
         colnames(ret) <- paste(1:k)
       }
@@ -547,10 +523,8 @@ dominates.lorenz_list <-
 ##             else ret[i,j] <- 0
 ##           }
 ##       }
-    for(i in 1:k)
-      {
-        for(j in 1:k)
-          {
+    for(i in 1:k) {
+        for(j in 1:k) {
             ret[i,j] <-
               dominates.lorenz(object[[i]], object[[j]],
                                lor.type=lor.type, rep.num=rep.num,
@@ -565,8 +539,7 @@ dominates.lorenz_list <-
 ## the variance using Beach and Davidson and Beach and Kaliski
 
 #' @export
-var_lor <- function(x, what = "lorenz", ...)
-{
+var_lor <- function(x, what = "lorenz", ...) {
     object <- x
     if(!is.lorenz(object)) stop("Object is not a Lorenz curve!")
     mu <- object$mean
@@ -581,8 +554,7 @@ var_lor <- function(x, what = "lorenz", ...)
     gamma <- lambda2 <- numeric(q)
     gamma[1] <- muj[1]
     lambda2[1] <- sigma2j[1]
-    for(i in 2:q)
-      {
+    for(i in 2:q) {
         gamma[i] <- (i - 1/i)*gamma[i] + 1/i*muj[i]
         lambda2[i] <- (i - 1/i)*lambda2[i-1] + 1/i*sigma2j[i] +
           (i - 1)*(gamma[i] - gamma[i-1])^2
@@ -593,8 +565,7 @@ var_lor <- function(x, what = "lorenz", ...)
     ## and now for eq. 8
     Omega <- matrix(0, ncol = q, nrow = q)
     for(j in 1:q)
-      for(i in 1:j)
-        {
+      for(i in 1:j) {
           Omega[i, j] <-
             pr[i]*(lambda2[i] +
                    (1 - pr[j])*(ksi[i]-gamma[i])*
@@ -607,8 +578,7 @@ var_lor <- function(x, what = "lorenz", ...)
     V.l <- matrix(0, ncol = q-1, nrow = q-1)
     ## check!! indexing
     for(j in 1:(q-1))
-      for(i in 1:j)
-        {
+      for(i in 1:j) {
           V.l[i, j] <-
             1/mu^2*Omega[i, j] +
               pr[i]*gamma[i]/mu^2 *
@@ -629,8 +599,7 @@ var_lor <- function(x, what = "lorenz", ...)
     ## now for the variance matrix of income shares
     V.s <- matrix(0, ncol = q, nrow = q)
     for(j in 1:q)
-      for(i in 1:j)
-        {
+      for(i in 1:j) {
           V.s[i, j] <- t.V[i+1, j+1] +  t.V[i, j] +
             - t.V[i+1, j] - t.V[i, j+1]
           if(i < j) V.s[j, i] <- V.s[i, j]
@@ -651,11 +620,10 @@ var_lor <- function(x, what = "lorenz", ...)
 lorenz.incdist <- function(x, q=5, p = NULL,
                            equivalise = FALSE,
                            group.cutoffs=TRUE,
-                           concentration=FALSE, ...)
-{
+                           concentration=FALSE, ...) {
     object <- x
     ## test if this is an incdist  object
-    if (!inherits(object, "incdist")){
+    if (!inherits(object, "incdist")) {
       stop("First argument must be the incdist object!")
     }
     ## strategy:
@@ -698,8 +666,7 @@ lorenz.incdist <- function(x, q=5, p = NULL,
         frm <- eqscale(object)
     # 0. the top level statistics
     if(length(panames)) frm.list <- split(frm, frm[[panames]])
-    else
-      {
+    else {
         frm.list <- list()
         frm.list[[1]] <- frm
       }
@@ -709,11 +676,9 @@ lorenz.incdist <- function(x, q=5, p = NULL,
     ## sumw to hold sum of weights
     ## must be done here
     ret.y <- n <- sumw <- list() ##ret.y{i:group}{l:partition}
-    for(i in 1:(1+length(grl)))
-        {
+    for(i in 1:(1+length(grl))) {
           ret.y[[i]] <- n[[i]] <- sumw[[i]] <- list()
-          for(l in 1:length(frm.list))
-              {
+          for(l in 1:length(frm.list)) {
                 ret.y[[i]][[l]] <- n[[i]][[l]] <- sumw[[i]][[l]] <- NA
               }
           names(ret.y[[i]]) <- names(n[[i]]) <- names(sumw[[i]]) <- pal
@@ -721,16 +686,12 @@ lorenz.incdist <- function(x, q=5, p = NULL,
     names(ret.y) <- names(n) <- names(sumw) <- c("all", grl)
     ret.x <- list() ##ret.y{j:incomecomps}{i:group}{l:partition}
     ## skip the first incnames, which is in "ret.y"
-    if(length(incnames))
-      {
-        for(j in 1:length(incnames))
-          {
+    if(length(incnames)) {
+        for(j in 1:length(incnames)) {
             ret.x[[j]] <- list()
-            for(i in 1:(1+length(grl)))
-              {
+            for(i in 1:(1+length(grl))) {
                 ret.x[[j]][[i]] <- list()
-                for(l in 1:length(frm.list))
-                  {
+                for(l in 1:length(frm.list)) {
                     ret.x[[j]][[i]][[l]] <- NA
                   }
                 names(ret.x[[j]][[i]]) <- pal
@@ -740,10 +701,8 @@ lorenz.incdist <- function(x, q=5, p = NULL,
         names(ret.x) <- incnames
       }
     ## start doing the work
-    for(l in 1:length(frm.list)) ## l indexes partitions
-      {
-        if(length(grnames))
-          {
+    for(l in 1:length(frm.list)) { ## l indexes partitions {
+        if(length(grnames)) {
             count.grnames <- c(dim(frm.list[[l]])[1],
                                table(frm.list[[l]][[grnames]]))
             frm.list.l <- split(frm.list[[l]],
@@ -753,8 +712,7 @@ lorenz.incdist <- function(x, q=5, p = NULL,
                                 as.factor(frm.list[[l]][[grnames]]))
             frm.list.l <- c(list(frm.list[[l]]), frm.list.l)
           }
-        else
-          {
+        else {
             frm.list.l <- list(frm.list[[l]])
             count.grnames <- dim(frm.list[[l]])[1]
           }
@@ -763,16 +721,14 @@ lorenz.incdist <- function(x, q=5, p = NULL,
         ## add this argument for the case in case you want to use common (overall)
         ## quantile cutoffs in each group
         cutoffs <- NULL
-        for(i in 1:(1+length(grl)))
-          {
+        for(i in 1:(1+length(grl))) {
             doing.name <- grnames[i]
             if(group.cutoffs && i>1)
                 cutoffs <- ret.y[[1]][[l]][["cut.offs"]]
             ## must add some code here to
             ## a. check if every i has a dataframe in frm.list.l
             ## b. if not, create an empty data frame for those
-            if(count.grnames[i] == 0)
-              {
+            if(count.grnames[i] == 0) {
                 frm.list.l[[i]] <- subset(frm.list[[l]], TRUE)
                 if(attr(income, "response"))
                   y <- 0
@@ -786,8 +742,7 @@ lorenz.incdist <- function(x, q=5, p = NULL,
             else {
               y <- NULL
             }
-            if(length(incnames))
-              {
+            if(length(incnames)) {
                 x <- as.matrix(frm.list.l[[i]][, incnames])
                 if (length(incnames) == dim(x)[2])
                   dimnames(x) <- list(NULL, incnames)
@@ -804,16 +759,13 @@ lorenz.incdist <- function(x, q=5, p = NULL,
             else
               ret.y[[i]][[l]] <-
                 lorenz.default(as.vector(y), p = p, cutoffs = cutoffs)
-            if(length(incnames))
-              {
-                for(j in 1:length(incnames))
-                  {
+            if(length(incnames)) {
+                for(j in 1:length(incnames)) {
                     ## "func" holds the functions to be calculated
                     ## these must accept two (an exactly two) arguments
                     ## the data and the weights
                     if (!count.grnames[i]) next
-                    if(!is.null(weights))
-                      {
+                    if(!is.null(weights)) {
                         if(concentration)
                           ret.x[[j]][[i]][[l]] <-
                               lorenz.default(x[,j], w = weights, ranked = as.vector(y), p = p,
@@ -822,8 +774,7 @@ lorenz.incdist <- function(x, q=5, p = NULL,
                           ret.x[[j]][[i]][[l]] <-
                             lorenz.default(x[,j], w = weights, p = p, cutoffs = cutoffs)
                       }
-                    else
-                      {
+                    else {
                         if(concentration)
                           ret.x[[j]][[i]][[l]] <-
                             lorenz.default(x[,j], ranked=as.vector(y), p = p, cutoffs = cutoffs)
@@ -846,8 +797,7 @@ lorenz.incdist <- function(x, q=5, p = NULL,
 #' @export as.data.frame.lorenz_incdist
 #' @export
 as.data.frame.lorenz_incdist <-
-    function(x, ...)
-    {
+    function(x, ...) {
         obj <- x
         if(!is.list(obj))
             stop("Object is not a list!")
@@ -856,8 +806,7 @@ as.data.frame.lorenz_incdist <-
         gs <- names(obj[[1]])
         tdl.top <-
             lapply(gs,
-                   function(x)
-                   {
+                   function(x) {
                        ids <- names(obj[[1]][[x]])
                        ret <- lapply(obj[[1]][[x]], as.data.frame.lorenz)
                        k <- dim(ret[[1]])[1]
@@ -872,17 +821,14 @@ as.data.frame.lorenz_incdist <-
         ## now the components
         if(length(obj)<2)
             td <- tdl.top
-        else
-            {
+        else {
                 comps <- names(obj[[2]])
                 tdl.comp <- vector(mode="list", length=length(comps))
                 names(tdl.comp) <- comps
-                for(j in seq(along=tdl.comp))
-                    {
+                for(j in seq(along=tdl.comp)) {
                         tdl.comp[[j]] <-
                             lapply(gs,
-                                   function(x)
-                                   {
+                                   function(x) {
                                        ids <- names(obj[[2]][[j]][[x]])
                                        ret <- lapply(obj[[2]][[j]][[x]], as.data.frame.lorenz)
                                        k <- dim(ret[[1]])[1]
@@ -892,8 +838,7 @@ as.data.frame.lorenz_incdist <-
                                        ret[["comp"]] <- "overall"
                                        ret[["group"]] <- x
                                        ret
-                                   }
-                                   )
+                                   })
                         tdl.comp[[j]] <- do.call("rbind", tdl.comp[[j]])
                         tdl.comp[[j]][["comp"]] <- comps[j]
                     }
@@ -906,8 +851,7 @@ as.data.frame.lorenz_incdist <-
 ## convert from a data.frame to a (single) lorenz curve
 #' @export as.lorenz
 #' @export
-as.lorenz <- function(df, namel=list(p="p", ordinates="ordinates"), ...)
-{
+as.lorenz <- function(df, namel=list(p="p", ordinates="ordinates"), ...) {
     q <- dim(df)[1]-1
     obj <- list(q=q,
                 quantile.means=rep(NA, q),

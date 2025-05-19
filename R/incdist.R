@@ -100,8 +100,7 @@ incdist.formula <-
   function(formula, weights, data = sys.frame(sys.parent()), subset,
            eqscale = NULL,
            group = ~ 1, part = ~ 1, idvar = ~ 0,
-           na.rm = TRUE, ...)
-  {
+           na.rm = TRUE, ...) {
     if (!inherits(formula, "formula")){
       stop("First argument must be the income formula!")
     }
@@ -140,23 +139,19 @@ incdist.formula <-
     ## initialize at NULL
     ## should panames and grnames be coerced to be factors here?
     yname <- panames <- grnames <- idvarnames <- NULL
-    if (attr(income, "response"))
-      {
+    if (attr(income, "response")) {
         incnames <- incnames[-1]
         yname <- deparse(formula[[2]])
       }
-    if(!is.empty.model(part))
-      {
+    if(!is.empty.model(part)) {
         panames <- as.character(attributes(paterms)$variables)[-1]
         for(i in panames) frm[[i]] <- as.factor(frm[[i]])
       }
-    if(!is.empty.model(group))
-      {
+    if(!is.empty.model(group)) {
         grnames <- as.character(attributes(grterms)$variables)[-1]
         for(i in grnames) frm[[i]] <- as.factor(frm[[i]])
       }
-    if(!is.empty.model(idvar))
-      {
+    if(!is.empty.model(idvar)) {
         idvarnames <- as.character(attributes(idterms)$variables)[-1]
       }
     ## start constructing the return object.
@@ -174,8 +169,7 @@ incdist.formula <-
     ret
   }
 #' @export
-print.incdist <- function(object, ...)
-  {
+print.incdist <- function(object, ...) {
     if(!is.incdist(object)) stop("Not an incdist object!")
     cat("An incdist object\n")
     cat("Overall variable: \t", object$yname, "\n")
@@ -202,8 +196,7 @@ summary.incdist <- function(object,
                             povertyline=NULL,
                             povertyline.function="weighted_median",
                             povertyline.fraction=0.5,
-                            frame=TRUE, ...)
-  {
+                            frame=TRUE, ...) {
     if (!inherits(object, "incdist")){
       stop("First argument must be the incdist object!")
     }
@@ -238,8 +231,7 @@ summary.incdist <- function(object,
         frm <- eqscale(object)
     # 0. the top level statistics
     if(length(panames)) frm.list <- split(frm, frm[[panames]])
-    else
-      {
+    else {
         frm.list <- list()
         frm.list[[1]] <- frm
       }
@@ -249,11 +241,9 @@ summary.incdist <- function(object,
     ## sumw to hold sum of weights
     ## must be done here
     ret.y <- n <- sumw <- list() ##ret.y{i:group}{l:partition}
-    for(i in 1:(1+length(grl)))
-        {
+    for(i in 1:(1+length(grl))) {
           ret.y[[i]] <- n[[i]] <- sumw[[i]] <- list()
-          for(l in 1:length(frm.list))
-              {
+          for(l in 1:length(frm.list)) {
                 ret.y[[i]][[l]] <- n[[i]][[l]] <- sumw[[i]][[l]] <- NA
               }
           names(ret.y[[i]]) <- names(n[[i]]) <- names(sumw[[i]]) <- pal
@@ -261,16 +251,12 @@ summary.incdist <- function(object,
     names(ret.y) <- names(n) <- names(sumw) <- c("all", grl)
     ret.x <- list() ##ret.y{j:incomecomps}{i:group}{l:partition}
     ## skip the first incnames, which is in "ret.y"
-    if(length(incnames))
-      {
-        for(j in 1:length(incnames))
-          {
+    if(length(incnames)) {
+        for(j in 1:length(incnames)) {
             ret.x[[j]] <- list()
-            for(i in 1:(1+length(grl)))
-              {
+            for(i in 1:(1+length(grl))) {
                 ret.x[[j]][[i]] <- list()
-                for(l in 1:length(frm.list))
-                  {
+                for(l in 1:length(frm.list)) {
                     ret.x[[j]][[i]][[l]] <- NA
                   }
             names(ret.x[[j]][[i]]) <- pal
@@ -280,10 +266,8 @@ summary.incdist <- function(object,
         names(ret.x) <- incnames
       }
     ## start doing the work
-    for(l in 1:length(frm.list)) ## l indexes partitions
-      {
-        if(length(grnames))
-          {
+    for(l in 1:length(frm.list)) ## l indexes partitions {
+        if(length(grnames)) {
             count.grnames <- c(dim(frm.list[[l]])[1],
                                table(frm.list[[l]][[grnames]]))
             frm.list.l <- split(frm.list[[l]],
@@ -293,20 +277,17 @@ summary.incdist <- function(object,
                                 as.factor(frm.list[[l]][[grnames]]))
             frm.list.l <- c(list(frm.list[[l]]), frm.list.l)
           }
-        else
-          {
+        else {
             frm.list.l <- list(frm.list[[l]])
             count.grnames <- dim(frm.list[[l]])[1]
           }
         ## this used to be
-        for(i in 1:(1+length(grl))) ## i indexes groups present. The first is all.
-          {
+        for(i in 1:(1+length(grl))) ## i indexes groups present. The first is all. {
             doing.name <- grnames[i]
             ## must add som code here to
             ## a. check if every i has a dataframe in frm.list.l
             ## b. if not, create an empty data frame for those
-            if(count.grnames[i] == 0)
-              {
+            if(count.grnames[i] == 0) {
                 frm.list.l[[i]] <- subset(frm.list[[l]], T)
                 if(attr(income, "response"))
                   y <- 0
@@ -320,8 +301,7 @@ summary.incdist <- function(object,
             else {
               y <- NULL
             }
-            if(length(incnames))
-              {
+            if(length(incnames)) {
                 x <- as.matrix(frm.list.l[[i]][, incnames])
                 if (length(incnames) == dim(x)[2])
                   dimnames(x) <- list(NULL, incnames)
@@ -331,10 +311,8 @@ summary.incdist <- function(object,
             ## figure out the poverty line if any of the functions is poverty
             ## only for group 1 ("all")
             ## this and the next place it is used needs to be revisited!
-            if(poverty & i==1)
-              {
-                if(is.null(povertyline))
-                  {
+            if(poverty & i==1) {
+                if(is.null(povertyline)) {
                     if(!is.null(weights))
                       poverty.line <-
                         povertyline.fraction*
@@ -352,15 +330,12 @@ summary.incdist <- function(object,
             ## these must accept two (an exactly two) arguments
             ## the data and the weights
             tmp.res <- list()
-            for(k in 1:length(func))
-              {
+            for(k in 1:length(func)) {
                 ## initialize to 0 for the case the group is empty
                 tmp.res[[k]] <- 0
                 if (!count.grnames[i]) next
-                if(!is.null(weights))
-                  {
-                    if(length(grep("poverty", func[k]))>0 & poverty)
-                      {
+                if(!is.null(weights)) {
+                    if(length(grep("poverty", func[k]))>0 & poverty) {
                         if(length(grep("absolute", func[k]))>0)
                           tmp.res[[k]] <-
                           do.call(func[k], list(as.vector(y), w = weights,
@@ -381,30 +356,24 @@ summary.incdist <- function(object,
               }
             names(tmp.res) <- func
             ret.y[[i]][[l]] <- tmp.res
-            if(length(incnames))
-              {
-                for(j in 1:length(incnames))
-                  {
+            if(length(incnames)) {
+                for(j in 1:length(incnames)) {
                     ## "func" holds the functions to be calculated
                     ## these must accept two (an exactly two) arguments
                     ## the data and the weights
                     tmp.res <- list()
-                    for(k in 1:length(func))
-                      {
+                    for(k in 1:length(func)) {
                         ## initialize to zero and check if groups is empty
                         tmp.res[[k]] <- 0
                         if (!count.grnames[i]) next
-                        if(!is.null(weights))
-                          {
-                            if(func[k] == "concentration_coef" || concentration)
-                              {
+                        if(!is.null(weights)) {
+                            if(func[k] == "concentration_coef" || concentration) {
                                 tmp.res[[k]] <-
                                   do.call(func[k],
                                           list(x[,j], w = weights,
                                                ranked = as.vector(y), ...))
                               }
-                            else
-                              {
+                            else {
                                 if(func[k] == "relative.poverty" || poverty)
                                   tmp.res[[k]] <-
                                     do.call(func[k],
@@ -418,15 +387,13 @@ summary.incdist <- function(object,
                                             list(x[,j], w=weights, ...))
                               }
                           }
-                        else
-                          {
+                        else {
                             if(func[k] == "concentration.coef" || concentration)
                               tmp.res[[k]] <-
                                 do.call(func[k],
                                         list(x[,j], ranked = as.vector(y)),
                                         ...)
-                            else
-                              {
+                            else {
                                 if(func[k] == "relative.poverty" || poverty)
                                   tmp.res[[k]] <-
                                     do.call(func[k], list(x[,j], ...))
@@ -444,8 +411,7 @@ summary.incdist <- function(object,
       }
     ## start constructing the return object.
     ## detach(object)
-    if(frame)
-      {
+    if(frame) {
         ret <- list(ret.y, ret.x,
                     n, sumw,
                     object$yname, object$incnames,
@@ -458,8 +424,7 @@ summary.incdist <- function(object,
                         "group", "partition",
                         "func", "frm", "old.frm")
       }
-    else
-      {
+    else {
         ret <- list(ret.y, ret.x,
                     n, sumw,
                     object$yname, object$incnames,
@@ -479,8 +444,7 @@ summary.incdist <- function(object,
 ## do a print.summary function for incdist
 #' @export
 print.summary.incdist <- function(object, all = FALSE, what = TRUE,
-                                  relative = FALSE, ...)
-  {
+                                  relative = FALSE, ...) {
     if(!inherits(object, "summary.incdist")) stop("Not an incdist summary object!")
     ##
     comps <- object$comp
@@ -495,28 +459,23 @@ print.summary.incdist <- function(object, all = FALSE, what = TRUE,
       groups <- c("all", levels(object$frm[[object$group]]))
     else groups <- 1
     stats <- list()
-    for(k in 1:length(funcs))
-      {
+    for(k in 1:length(funcs)) {
         ## this assumes that the funcs have returned scalars for each part, comps
         stats[[k]] <- list()
         ##
-        for(j in 1:(1+length(comps)))
-          {
+        for(j in 1:(1+length(comps))) {
 
             stats[[k]][[j]] <- matrix(0, nrow = length(parts),
                                       ncol = length(groups))
             rownames(stats[[k]][[j]]) <- parts
             colnames(stats[[k]][[j]]) <- groups
-            for(l in 1:length(parts))
-              {
-                for(i in 1:length(groups))
-                  {
+            for(l in 1:length(parts)) {
+                for(i in 1:length(groups)) {
                     if(j==1)
                       stats[[k]][[j]][l, i] <- object[[1]][[i]][[l]][[k]]
                     else
                       stats[[k]][[j]][l, i] <- object[[2]][[j-1]][[i]][[l]][[k]]
-                    if(relative == TRUE)
-                      {
+                    if(relative == TRUE) {
                         if(j==1)
                           stats[[k]][[j]][l, i] <-object[[1]][[i]][[l]][[k]]/
                             object[[1]][[1]][[l]][[k]]
@@ -540,10 +499,8 @@ print.summary.incdist <- function(object, all = FALSE, what = TRUE,
                                 ncol = length(groups))
     rownames(stats[[k+2]][[1]]) <- parts
     colnames(stats[[k+2]][[1]]) <- groups
-    for(l in 1:length(parts))
-      {
-        for(i in 1:length(groups))
-          {
+    for(l in 1:length(parts)) {
+        for(i in 1:length(groups)) {
             stats[[k+1]][[1]][l, i] <- object[["sample.size"]][[i]][[l]]
             stats[[k+2]][[1]][l, i] <- object[["sum.weights"]][[i]][[l]]
             if(relative == TRUE)
@@ -560,13 +517,10 @@ print.summary.incdist <- function(object, all = FALSE, what = TRUE,
     cat("Variables: ", retval$variables, "\n")
     cat("Partitions: ", retval$partitions, "\n")
     cat("Statistics: ", retval$functions, "\n")
-    if(all)
-      {
+    if(all) {
         cat("The matrices: \n")
-        for(k in 1:(length(retval$result.matrices)-2)) ## indexes functions
-          {
-            for(j in 1:(1+length(comps)))
-              {
+        for(k in 1:(length(retval$result.matrices)-2)) ## indexes functions {
+            for(j in 1:(1+length(comps))) {
                 cat("Statistic: ", retval$functions[k],
                     "Income component: ", retval$variables[j], "\n")
                 print(retval$result.matrices[[k]][[j]])
@@ -585,8 +539,7 @@ print.summary.incdist <- function(object, all = FALSE, what = TRUE,
 ## the summary object has results for the top-level variables in [[1]]
 ## and all components in [[2]]
 #' @export
-incdist.as.array <- function(object, ...)
-  {
+incdist.as.array <- function(object, ...) {
     ##if(!inherits(object, "summary.incdist"))
     ##  stop("Not an incdist summary objectect!")
     fun <- object$functions
@@ -655,10 +608,8 @@ is.incdist <- function(object) inherits(object, "incdist")
 #'
 
 #' @export
-eqscale <- function(object)
-  {
-    .tmp.eqscale <-   function (object)
-      {
+eqscale <- function(object) {
+    .tmp.eqscale <-   function (object) {
         if(!is.incdist(object)) stop("Not an incdist objectect!")
         if(is.null(object$eqscale)) stop("No equivalence scale present in objectect!")
         form <- object$eqscale$form
@@ -797,8 +748,7 @@ poverty.incdist <-
 ## make a "as.data.frame" method
 #' @export
 as.data.frame.incdist <- function(object, all=TRUE, what=TRUE,
-                                  relative=FALSE, ...)
-  {
+                                  relative=FALSE, ...) {
     if(!inherits(object, "summary.incdist")) stop("Not an incdist summary object!")
     vars <- c(object$overall, object$comp)
     groupdim <- object$group
@@ -831,8 +781,7 @@ as.data.frame.incdist <- function(object, all=TRUE, what=TRUE,
     ## 1. z ~ y + x (works)
     ## 2. z ~ 1 (works)
     ## 3. ~ x + y
-    if(length(object[[1]])>0)
-      {
+    if(length(object[[1]])>0) {
         tx1 <- unlist(object[1])
         ne <- length(strsplit(names(tx1[1]), "\\.")[[1]])
         td1 <- data.frame(val=as.numeric(tx1))
@@ -842,8 +791,7 @@ as.data.frame.incdist <- function(object, all=TRUE, what=TRUE,
         td2 <-
           as.data.frame(matrix(tn, ncol=ne, byrow=T), stringsAsFactors = FALSE)
       }
-    if(length(object[[2]])>0)
-      {
+    if(length(object[[2]])>0) {
         tx3 <- unlist(object[2])
         td3 <- data.frame(val=as.numeric(tx3))
         ## a temporary fix
