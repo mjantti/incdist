@@ -407,8 +407,6 @@ summary.incdist <- function(object,
                     ret.x[[j]][[i]][[l]] <- tmp.res
                   }
               }
-          }
-      }
     ## start constructing the return object.
     ## detach(object)
     if(frame) {
@@ -443,8 +441,7 @@ summary.incdist <- function(object,
 
 ## do a print.summary function for incdist
 #' @export
-print.summary.incdist <- function(object, all = FALSE, what = TRUE,
-                                  relative = FALSE, ...) {
+print.summary.incdist <- function(object, all = FALSE, what = TRUE, relative = FALSE, ...) {
     if(!inherits(object, "summary.incdist")) stop("Not an incdist summary object!")
     ##
     comps <- object$comp
@@ -464,9 +461,7 @@ print.summary.incdist <- function(object, all = FALSE, what = TRUE,
         stats[[k]] <- list()
         ##
         for(j in 1:(1+length(comps))) {
-
-            stats[[k]][[j]] <- matrix(0, nrow = length(parts),
-                                      ncol = length(groups))
+            stats[[k]][[j]] <- matrix(0, nrow = length(parts), ncol = length(groups))
             rownames(stats[[k]][[j]]) <- parts
             colnames(stats[[k]][[j]]) <- groups
             for(l in 1:length(parts)) {
@@ -519,7 +514,7 @@ print.summary.incdist <- function(object, all = FALSE, what = TRUE,
     cat("Statistics: ", retval$functions, "\n")
     if(all) {
         cat("The matrices: \n")
-        for(k in 1:(length(retval$result.matrices)-2)) ## indexes functions {
+        for(k in 1:(length(retval$result.matrices)-2)) { ## indexes functions
             for(j in 1:(1+length(comps))) {
                 cat("Statistic: ", retval$functions[k],
                     "Income component: ", retval$variables[j], "\n")
@@ -548,15 +543,8 @@ incdist.as.array <- function(object, ...) {
     gro <- object$groups
     ## make a large array that holds all
     ret <- array(unlist(object[["result.matrices"]]),
-                 dim=c(length(par),
-                   length(gro),
-                   length(var),
-                   length(fun)),
-                 dimnames=
-                 list(partitions=par,
-                      groups=gro,
-                      variables=var,
-                      functions=fun))
+                 dim=c(length(par), length(gro), length(var), length(fun)),
+                 dimnames=list(partitions=par, groups=gro, variables=var, functions=fun))
     ret
   }
 
@@ -663,14 +651,12 @@ eqscale <- function(object) {
 #'     University Press, Manchester.
 
 #' @export
-inequality <- function(x, ...)
-{
-  if(is.null(class(x))) class(x)  <- data.class(x)
+inequality <- function(x, ...) {
+    if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("inequality", x)
 }
 #' @export
-inequality.default <- function(x, type = c("gini", "ge", "atkinson", "cv2"), ...)
-{
+inequality.default <- function(x, type = c("gini", "ge", "atkinson", "cv2"), ...) {
   if(!is.numeric(x)) stop("argument x is non-numeric!")
   args <- list(...)
   ret <- numeric(length(type))
@@ -680,10 +666,7 @@ inequality.default <- function(x, type = c("gini", "ge", "atkinson", "cv2"), ...
 }
 #' @export
 inequality.incdist <-
-  function(x, what = 1, type = c("gini", "ge", "atkinson", "cv2"),
-           frame=FALSE,
-           equivalise=FALSE, ...)
-{
+  function(x, what = 1, type = c("gini", "ge", "atkinson", "cv2"), frame=FALSE,  equivalise=FALSE, ...) {
     object <- x
     if(!is.incdist(object)) stop("Not an incdist object!")
     ## for what
@@ -713,15 +696,13 @@ inequality.incdist <-
 #'     redistribution of income. A mathematical analysis.} Manchester
 #'     University Press, Manchester.
 #' @export
-poverty <- function(x, ...)
-{
+poverty <- function(x, ...) {
   if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("poverty", x)
 }
 
 #' @export
-poverty.default <- function(x, type = "fgt", ...)
-{
+poverty.default <- function(x, type = "fgt", ...) {
   if(!is.numeric(x)) stop("argument x is non-numeric!")
   args <- list(...)
   ret <- numeric(length(type))
@@ -731,9 +712,7 @@ poverty.default <- function(x, type = "fgt", ...)
 }
 
 #' @export
-poverty.incdist <-
-  function(x, what = 1, type = "fgt", frame=FALSE, ...)
-{
+poverty.incdist <- function(x, what = 1, type = "fgt", frame=FALSE, ...) {
     object <- x
   if(!is.incdist(object)) stop("Not an incdist object!")
   ## for what
@@ -747,8 +726,7 @@ poverty.incdist <-
 
 ## make a "as.data.frame" method
 #' @export
-as.data.frame.incdist <- function(object, all=TRUE, what=TRUE,
-                                  relative=FALSE, ...) {
+as.data.frame.incdist <- function(object, all=TRUE, what=TRUE, relative=FALSE, ...) {
     if(!inherits(object, "summary.incdist")) stop("Not an incdist summary object!")
     vars <- c(object$overall, object$comp)
     groupdim <- object$group

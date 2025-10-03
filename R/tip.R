@@ -298,12 +298,10 @@ dominates.tip_list <- function(object, rep.num=TRUE, above.p=FALSE, ...) {
 ## tip curves for a incdist object
 #' @export tip.incdist
 #' @export
-tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
-                           concentration=TRUE, ...)
-{
+tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE, concentration=TRUE, ...) {
     object <- x
     ## test if this is an incdist  object
-    if (!inherits(object, "incdist")){
+    if (!inherits(object, "incdist")) {
       stop("First argument must be the incdist object!")
     }
     ## strategy:
@@ -374,7 +372,7 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
     ##     names(ret.x) <- incnames
     ##   }
     ## start doing the work
-    for(l in 1:length(frm.list)) ## l indexes partitions {
+    for(l in 1:length(frm.list)) { ## l indexes partitions {
         if(length(grnames)) {
             count.grnames <- c(dim(frm.list[[l]])[1],
                                table(frm.list[[l]][[grnames]]))
@@ -462,7 +460,7 @@ tip.incdist <- function(x, q=5, equivalise = FALSE, only.aggregate=TRUE,
             ##       } ## j
             ##   } ## if j
           }
-      } ## partitions (years, mostly, could be countries
+      } ## partitions (years, mostly, could be countries)
     ## ret <- list(ret.y, ret.x)
     ret <- ret.y
     structure(ret, class = c("tip_incdist", "tip"))

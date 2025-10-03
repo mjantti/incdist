@@ -114,8 +114,7 @@
 #'
 #'
 #' @export
-lorenz <- function(x, ...)
-{
+lorenz <- function(x, ...) {
   if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("lorenz", x)
 }
@@ -407,8 +406,7 @@ as.data.frame.lorenz_list <- function(x, row.names, optional, ...) {
 
 #' @export dominates.lorenz
 #' @export
-dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
-                             above.p=FALSE, ...) {
+dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE, above.p=FALSE, ...) {
     if(!is.lorenz(x)||!is.lorenz(y)) stop("Not a Lorenz curve!")
     ## based on micro.data?
     microdata <- FALSE
@@ -490,11 +488,10 @@ dominates.lorenz <- function(x, y, lor.type="ord", rep.num=TRUE,
 #' @export dominates.lorenz_list
 #' @export
 dominates.lorenz_list <-
-  function(x, symmetric=FALSE,
-           lor.type="ord", rep.num=TRUE, above.p=FALSE, ...) {
-    object <- x
-    if(!is.list(object))
-      stop("Object is not a list!")
+  function(x, symmetric=FALSE, lor.type="ord", rep.num=TRUE, above.p=FALSE, ...) {
+      object <- x
+      if(!is.list(object))
+          stop("Object is not a list!")
     if(!all(sapply(object, is.lorenz)))
       stop("Some element  is not a Lorenz curve!")
     k <- length(object)
@@ -559,7 +556,6 @@ var_lor <- function(x, what = "lorenz", ...) {
         lambda2[i] <- (i - 1/i)*lambda2[i-1] + 1/i*sigma2j[i] +
           (i - 1)*(gamma[i] - gamma[i-1])^2
       }
-
     ## be careful that the dimensions of cutsx etx are right!
     ## work first with theorem 1 in beach and davidson
     ## and now for eq. 8
@@ -617,10 +613,7 @@ var_lor <- function(x, what = "lorenz", ...) {
 ## lorenz curves for a incdist object
 #' @export lorenz.incdist
 #' @export
-lorenz.incdist <- function(x, q=5, p = NULL,
-                           equivalise = FALSE,
-                           group.cutoffs=TRUE,
-                           concentration=FALSE, ...) {
+lorenz.incdist <- function(x, q=5, p = NULL, equivalise = FALSE, group.cutoffs=TRUE, concentration=FALSE, ...) {
     object <- x
     ## test if this is an incdist  object
     if (!inherits(object, "incdist")) {
@@ -796,8 +789,7 @@ lorenz.incdist <- function(x, q=5, p = NULL,
 ## and an as.data.frame method
 #' @export as.data.frame.lorenz_incdist
 #' @export
-as.data.frame.lorenz_incdist <-
-    function(x, ...) {
+as.data.frame.lorenz_incdist <- function(x, ...) {
         obj <- x
         if(!is.list(obj))
             stop("Object is not a list!")
@@ -816,8 +808,7 @@ as.data.frame.lorenz_incdist <-
                        ret[["comp"]] <- "overall"
                        ret[["group"]] <- x
                        ret
-                   }
-                   )
+                   })
         tdl.top <- do.call("rbind", tdl.top)
         ## now the components
         if(length(obj)<2)
