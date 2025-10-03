@@ -809,9 +809,10 @@ as.data.frame.lorenz_incdist <-
                    function(x) {
                        ids <- names(obj[[1]][[x]])
                        ret <- lapply(obj[[1]][[x]], as.data.frame.lorenz)
-                       k <- dim(ret[[1]])[1]
+                       for(i in seq(along=ids)) {
+                           ret[[i]][["id"]] <- ids[i]
+                       }
                        ret <- do.call("rbind", ret)
-                       ret[["id"]] <- rep(ids, each=k)
                        ret[["comp"]] <- "overall"
                        ret[["group"]] <- x
                        ret
@@ -831,10 +832,10 @@ as.data.frame.lorenz_incdist <-
                                    function(x) {
                                        ids <- names(obj[[2]][[j]][[x]])
                                        ret <- lapply(obj[[2]][[j]][[x]], as.data.frame.lorenz)
-                                       k <- dim(ret[[1]])[1]
-
+                                       for(i in seq(along=ids)) {
+                                           ret[[i]][["id"]] <- ids[i]
+                                       }
                                        ret <- do.call("rbind", ret)
-                                       ret[["id"]] <- rep(ids, each=k)
                                        ret[["comp"]] <- "overall"
                                        ret[["group"]] <- x
                                        ret
