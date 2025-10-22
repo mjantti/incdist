@@ -36,7 +36,7 @@
 #' @return A plot.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{lorenz}}.
-#' @references
+#' @references \insertRef{lambert1993}{incdist}
 #' @examples
 #'
 #' plot(lorenz(runif(100), q = 5))
@@ -51,8 +51,7 @@ plot.lorenz <- function(x, add = FALSE, lor.type = "ord",
                         xlab = FALSE, ylab = FALSE,
                         ylim = FALSE, xlim = FALSE,
                         type = "l", lty= FALSE,
-                        ...)
-{
+                        ...) {
     object <- x
   if(!is.lorenz(object)) stop("Not a Lorenz curve!")
   ## use the as.data.frame
@@ -102,11 +101,12 @@ plot.lorenz <- function(x, add = FALSE, lor.type = "ord",
 
 # a plot method
 # this is missing lor.type at least. Why?
+#' @export plot.lorenz.defunct
+#' @export
 plot.lorenz.defunct <-
   function(x, add = FALSE,
            xlab = FALSE, ylab = FALSE,
-           xlim = FALSE, ylim = FALSE, type = FALSE, ...)
-{
+           xlim = FALSE, ylim = FALSE, type = FALSE, ...) {
         object <- x
   if(!is.lorenz(object)) stop("Not a Lorenz curve!")
   ## use the as.data.frame

@@ -13,7 +13,7 @@
 #' @param na.rm a logical indicating whether NA's should removed.
 #' @param absolute a logical, indicating if the absolute rather than relative
 #' measure be given.
-#' @return
+#' @return The index value
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{gini}} \code{\link{ge}}, \code{\link{atkinson}}
 #' @references

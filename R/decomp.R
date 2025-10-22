@@ -28,15 +28,12 @@
 #' td <- data.frame(y=exp(rnorm(500)), g=sample(letters[1:4], 500, replace=TRUE))
 #' decomp_groups(y, group=g, data=td)
 #' @export
-decomp_groups <- function(x, w = rep(1,length(x)), eta = 2,
-               data = NULL,  ranked=x, na.rm = TRUE, group=NULL, func="ge",
-                          ...) {
+decomp_groups <- function(x, w = rep(1,length(x)), eta = 2, data = NULL,  ranked=x, na.rm = TRUE, group=NULL, func="ge", ...) {
       if(!is.null(data) & is.data.frame(data)) {
           attach(data)
           on.exit(detach(data))
       }
-      ind <-
-        do.call(func, list(x=x, w=w, eta=eta, na.rm=na.rm))
+      ind <- do.call(func, list(x=x, w=w, eta=eta, na.rm=na.rm))
       ## now collapse
       xb <- tapply(x, list(g=group), mean, na.rm=TRUE)
       wb <- tapply(w, list(g=group), sum, na.rm=TRUE)

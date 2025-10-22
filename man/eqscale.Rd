@@ -23,7 +23,9 @@ Presuposes the present in object of a list called eqscale, with (at least)
 components formula, coef. Variables in formula must be found in the
 object\$frm.
 }
-\examples{
+\author{
+Markus Jantti \email{markus.jantti@iki.fi}
+#' @examples
 
 x1 <- runif(50)
 x2 <- rexp(50)
@@ -48,8 +50,4 @@ id.0$eqscale <- list(formula = ~ (ad + k*ch)^d, coef=list(k=.8, d=.75),
              type="citro-michael")
 
 eqscale(id.0)
-
-}
-\author{
-Markus Jantti \email{markus.jantti@iki.fi}
 }

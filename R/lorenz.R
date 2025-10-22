@@ -128,17 +128,8 @@ lorenz <- function(x, ...) {
 
 #' @export lorenz.default
 #' @export
-lorenz.default <- function(x, w = rep(1,length(x)),
-                           ranked = x,
-                           q = 5,
-                           p = NULL,
-                           data = NULL,
-                           subset,
-                           na.rm = TRUE,
-                           cov = FALSE,
-                           no.negatives = FALSE,
-                           cutoffs = NULL,
-                           ...) {
+lorenz.default <-
+    function(x, w = rep(1,length(x)), ranked = x, q = 5, p = NULL, data = NULL, subset, na.rm = TRUE, cov = FALSE, no.negatives = FALSE, cutoffs = NULL, ...) {
     ## attach a possible data frame. Remember to detach it!
     if(!is.null(data) & is.data.frame(data)) {
           attach(data)
@@ -320,7 +311,7 @@ is.lorenz <- function(x, ...) inherits(x, "lorenz")
 ## summary and print methods
 #' @export
 summary.lorenz <- function(x, ...)
-  structure(x, class = c("summary.lorenz", class(object)))
+  structure(x, class = c("summary.lorenz", class(x)))
 
 #' @export
 print.summary.lorenz <- function(x, ...) {

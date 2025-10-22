@@ -6,19 +6,14 @@
 #'
 #' This function estimates the Fields income mobility index.
 #'
-#'
 #' @param x A matrix with income data
 #' @param w A vector of weights
 #' @param data A data frame in which to look for the data.
 #' @param na.rm A logical, indicating whether or not to remove NAs
 #' @return A scalar.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso
 #' @references
 #' \insertRef{fieldsandok1999}{incdist}
-#'
-#' @examples
-#'
 #'
 #' @export fields
 fields <- function(x, w = rep(1,dim(x)[1]), data = list(), na.rm=TRUE) {
@@ -48,12 +43,8 @@ fields <- function(x, w = rep(1,dim(x)[1]), data = list(), na.rm=TRUE) {
 #' @param index An inequality index.
 #' @return A scalar.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso
 #' @references
 #' \insertRef{shorrocks1978jet}{incdist}
-#'
-#' @examples
-#'
 #'
 #' @export shorrocks
 
@@ -114,9 +105,6 @@ shorrocks <- function(x, w = rep(1,dim(x)[1]),
 #' @param index An inequality index.
 #' @return A list including the conditional and unconditional matrices (EDIT).
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso
-#' @references Cite something suitable. (EDIT)
-#' @examples
 #'
 #' @importFrom Hmisc wtd.table
 #'

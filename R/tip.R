@@ -186,7 +186,7 @@ summary.tip <- function(object, ...) {
   }
 
 #' @export
-print.sum.tip <- function(x, ...){
+print.sum.tip <- function(x, ...) {
   # how to handle a micro curve? in summary?
   q <- length(x$p) - 1
   cat("TIP curve at ", q, " points.\n")
@@ -205,7 +205,8 @@ print.sum.tip <- function(x, ...){
 }
 
 ## as.data.frame
-
+#' @export as.data.frame.tip
+#' @export
 as.data.frame.tip <- function(x, row.names, optional, ...) {
     object <- x
     if(!is.tip(object)) stop("Not a TIP curve!")

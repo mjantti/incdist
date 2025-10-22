@@ -41,9 +41,6 @@ A list including the conditional and unconditional matrices (EDIT).
 \description{
 This function a mobility matrix for two-dimensional data.
 }
-\references{
-Cite something suitable. (EDIT)
-}
 \author{
 Markus Jantti \email{markus.jantti@iki.fi}
 }

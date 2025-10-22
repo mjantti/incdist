@@ -17,7 +17,7 @@ gini(x, ...)
 \item{w}{an optional vector of non-negative integer values weights.}
 
 \item{eta}{the generalization parameter. For the default value of
-eta = 2, gini() yields the ordinary gini coefficient.}
+eta = 2, gini() yields the ordinary gini coefficient.(Makes little sense to type = "absolute".)}
 
 \item{na.rm}{a logical indicating whether NA's should removed.}
 
@@ -26,6 +26,15 @@ eta = 2, gini() yields the ordinary gini coefficient.}
 \item{ranked}{an optional variable whch defines the ranking. If not
 the default, the resulting index is a concentration
 coefficient.}
+
+\item{no.negatives}{indicates whether or not negative incomes should be
+allowed.}
+
+\item{type}{whether to estimate an absolute or relative gini.}
+
+\item{absolute}{alternative for type = "absolute".}
+
+\item{small}{if set to TRUE estimates the gini coefficient by integrating a  micro-data-based Lorenz curve. (This ensures the resulting gini respects the Lorenz order)}
 }
 \value{
 The generalized gini or concentration coefficient.
@@ -49,7 +58,7 @@ gini(runif(20), rpois(20, 5), eta = 2)
 
 }
 \references{
-\insertRef{lambert1993}{incdist}
+\insertRef{lambert1993}{incdist} \insertRef{davidson2009}{incdist}
 }
 \seealso{
 \code{\link{inequality}}, \code{\link{incdist}}, \code{\link{lorenz}}

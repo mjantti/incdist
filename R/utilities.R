@@ -13,6 +13,17 @@ integrate.locfit <- function(x, y, ...) {
   res
 }
 
+integrate_lorenz <- function(x, ...) {
+    if(!is.lorenz(x)) stop("Not a lorenz curve object!")
+    p <-c(0, x$p)
+    l <- c(0, x$ordinates)
+    n <- length(p)
+    dp <- diff(p)
+    lhat <- .5*(l[2:n] + l[1:n-1])
+    g <- 1 - 2*sum(lhat * dp)
+    g
+}
+
 ## why on earth is this here?
 "trace.plot" <-
     function(x, y, g, data = sys.parent(),
@@ -25,7 +36,7 @@ integrate.locfit <- function(x, y, ...) {
           # lty = i too many line types make postscript pictures bad
           # col = i colors don't print well
           # try lty = i %/% 2
-            evalq(lines(x,y, lty = as.numeric(i), col = col), subset(dfr,g==i))
+            evalq(lines(x, y, lty = as.numeric(i), col = col), subset(dfr,g==i))
     }
 
 # for weighted data.
@@ -70,7 +81,7 @@ integrate.locfit <- function(x, y, ...) {
 #' @importFrom Hmisc wtd.quantile
 #'
 #' @export
-weighted_moment <- function(x,w,a=1, ranked=x, na.rm = FALSE) {
+weighted_moment <- function(x, w, a=1, ranked=x, na.rm = FALSE) {
   if (missing(w))
     w <- rep(1, length(x))
   if (na.rm) {
@@ -81,7 +92,7 @@ weighted_moment <- function(x,w,a=1, ranked=x, na.rm = FALSE) {
   weighted.mean(x^a,w, na.rm = na.rm)
 }
 #' @export
-weighted_mean <- function(x,w, na.rm = FALSE) {
+weighted_mean <- function(x, w, na.rm = FALSE) {
     weighted.mean(x, w, na.rm)
 }
 #' @export
@@ -160,7 +171,6 @@ weighted_crosstable <- function(x1, x2, w1 = rep(1, length(x1))) {
 #' removed.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
 #' @seealso \code{\link{complete.cases}}, \code{\link{na.omit}}
-#' @references
 #' @examples
 #'
 #' x <- c(NA, 1:5, Inf, -1, NaN, -Inf)

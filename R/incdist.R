@@ -46,7 +46,6 @@
 #' to calculate.
 #' @return An object of class incdist.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso
 #' @references
 #' \insertRef{lambert1993}{incdist}
 #'
@@ -90,18 +89,14 @@
 ## the formula method, currently only this exists
 ## will this need to be modified
 #' @export
-incdist <- function(x, ...)
-{
+incdist <- function(x, ...) {
   if(is.null(class(x))) class(x)  <- data.class(x)
   UseMethod("incdist", x)
 }
 #' @export
 incdist.formula <-
-  function(formula, weights, data = sys.frame(sys.parent()), subset,
-           eqscale = NULL,
-           group = ~ 1, part = ~ 1, idvar = ~ 0,
-           na.rm = TRUE, ...) {
-    if (!inherits(formula, "formula")){
+  function(formula, weights, data = sys.frame(sys.parent()), subset, eqscale = NULL,  group = ~ 1, part = ~ 1, idvar = ~ 0, na.rm = TRUE, ...) {
+    if (!inherits(formula, "formula")) {
       stop("First argument must be the income formula!")
     }
     # 1. Set up the data.
@@ -188,16 +183,9 @@ print.incdist <- function(object, ...) {
 ## NB: problem with Gini coefficient use
 #' @export
 ## this function needs quite a bit of work
-summary.incdist <- function(object,
-                            equivalise = FALSE,
-                            func = c("weighted_mean", "weighted_std",
-                              "gini.default"),
-                            poverty=FALSE, concentration = FALSE,
-                            povertyline=NULL,
-                            povertyline.function="weighted_median",
-                            povertyline.fraction=0.5,
-                            frame=TRUE, ...) {
-    if (!inherits(object, "incdist")){
+summary.incdist <- function(object, equivalise = FALSE, func = c("weighted_mean", "weighted_std", "gini.default"), concentration = FALSE,
+                            poverty=FALSE, povertyline=NULL, povertyline.function="weighted_median", povertyline.fraction=0.5, frame=TRUE, ...) {
+    if (!inherits(object, "incdist")) {
       stop("First argument must be the incdist object!")
     }
     ## 2. this is where the income inequality code should start
@@ -566,9 +554,7 @@ is.incdist <- function(object) inherits(object, "incdist")
 #' replaced the equivalised version and the old unequavalised form has been
 #' copied old.frm.
 #' @author Markus Jantti \email{markus.jantti@@iki.fi}
-#' @seealso
-#' @references
-#' @examples
+#' #' @examples
 #'
 #' x1 <- runif(50)
 #' x2 <- rexp(50)
@@ -618,7 +604,6 @@ eqscale <- function(object) {
         }
         eval(form[[2]], envir = env)
       }
-
     if(!is.incdist(object)) stop("Not an incdist objectect!")
     ## this is probably not needed?
     ##attach(object)

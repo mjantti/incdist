@@ -13,7 +13,7 @@ hasse(object, above.p = 0.1, lor.type = "ord", ...)
 
 \item{lor.type}{For lorenz curves, gives the type of Lorenz curve.}
 
-\item{...}{Additional argumens to dominates.lorenz or dominates.tip.}
+\item{...}{Additional arguments to dominates.lorenz or dominates.tip.}
 }
 \value{
 A plot.

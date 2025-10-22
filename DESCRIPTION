@@ -1,6 +1,6 @@
 Package: incdist
-Version: 0.94-1
-Date: 2022-18-27
+Version: 0.95-1
+Date: 2025-10-03
 Title: A collection of functions for income distribution analysis
 Author: Markus Jantti <markus.jantti@iki.fi>
 Maintainer: Markus Jantti <markus.jantti@iki.fi>
@@ -10,4 +10,5 @@ RdMacros: Rdpack
 Description: This package contains functions and objects to assist in the analysis of income (or wealth or consumption) distributions.
 License: GPL-2
 URL: http://www.r-project.org
-RoxygenNote: 7.2.0
+RoxygenNote: 7.3.2
+Encoding: UTF-8

@@ -61,6 +61,9 @@ correectly set.
 plot(lorenz(runif(100), q = 5))
 
 }
+\references{
+\insertRef{lambert1993}{incdist}
+}
 \seealso{
 \code{\link{lorenz}}.
 }
