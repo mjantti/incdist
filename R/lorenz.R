@@ -613,7 +613,7 @@ lorenz.incdist <- function(x, q=5, p = NULL, equivalise = FALSE, group.cutoffs=T
     ## strategy:
     ## to proper Lorenz curves for "y" and concentration curves for x:s
     ## code stolen from summary.incdist
-        ## 2. this is where the income inequality code should start
+    ## 2. this is where the income inequality code should start
     ## y contains the income variable
     ## check if y == x (to some tolerance)
     ## i. for each part
@@ -625,7 +625,6 @@ lorenz.incdist <- function(x, q=5, p = NULL, equivalise = FALSE, group.cutoffs=T
     attach(object)
     on.exit(detach(object))
     ## this does not work. How should the argument to detach be given?
-    ##on.exit(detach("object", character.only=TRUE))
     ## some changes needed since I introduced the possibility to give p as an argument
     if(is.null(p) & q)
         p <- seq(0, 1, 1/q)
@@ -745,9 +744,6 @@ lorenz.incdist <- function(x, q=5, p = NULL, equivalise = FALSE, group.cutoffs=T
                 lorenz.default(as.vector(y), p = p, cutoffs = cutoffs)
             if(length(incnames)) {
                 for(j in 1:length(incnames)) {
-                    ## "func" holds the functions to be calculated
-                    ## these must accept two (an exactly two) arguments
-                    ## the data and the weights
                     if (!count.grnames[i]) next
                     if(!is.null(weights)) {
                         if(concentration)
@@ -766,7 +762,7 @@ lorenz.incdist <- function(x, q=5, p = NULL, equivalise = FALSE, group.cutoffs=T
                           ret.x[[j]][[i]][[l]] <-
                             lorenz.default(x[,j], p = p, cutoffs = cutoffs)
                     }
-                  } ## j
+                } ## j
               } ## if j
         }
       } ## partitions (years, mostly, could be countries
@@ -827,7 +823,11 @@ as.data.frame.lorenz_incdist <- function(x, ...) {
                     }
                 tdl.comp <- do.call("rbind", tdl.comp)
                 td <- rbind(tdl.top, tdl.comp)
-            }
+        }
+        ## if there are no partitions, the variable "id" does not make it to the dataset
+        ## this is a silly hack for the case
+        if(!any(names(td)) %in% "id")
+            td[["id"]] <- 1
         td
     }
 

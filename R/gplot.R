@@ -150,8 +150,7 @@ plot.lorenz.defunct <-
 #' @export lines.lorenz
 #' @export
 lines.lorenz <-
-  function(x, lor.type = "ord", diff = FALSE, ...)
-{
+  function(x, lor.type = "ord", diff = FALSE, ...) {
   ## do the "..." get correctly passed?
   plot.lorenz(x=x, add=TRUE, lor.type=lor.type, diff=diff, ...)
 }
@@ -166,8 +165,7 @@ plot.lorenz_list <-  function(x, add = FALSE, lor.type = "ord",
                           type = "l",
                           col = FALSE,
                           legend = TRUE,
-                          ...)
-{
+                          ...) {
             object <- x
     if(!is.list(object))
       stop("Object is is not a list!")
@@ -206,7 +204,7 @@ plot.lorenz_list <-  function(x, add = FALSE, lor.type = "ord",
     }
     ## expand td1 and add elname
     td1$elname <- rep(unique(td$elname)[1], 2)
-    if(!add){
+    if(!add) {
         d <- ggplot(td, aes(x=p, y=y, group=elname, colour=elname)) + geom_line() +
             ylab(ylab) + xlab(xlab)
         if(lor.type!="gen")
@@ -227,9 +225,8 @@ plot.lorenz_incdist <-  function(x, add = FALSE, lor.type = "ord",
                           type = "l",
                           col = FALSE,
                           legend = TRUE,
-                          ...)
-{
-            object <- x
+                          ...) {
+    object <- x
     if(!inherits(object, "lorenz_incdist")) stop("Not an incdist summary object!")
     td <- as.data.frame(object)
     ## preserve the order of group, comp
@@ -317,8 +314,7 @@ plot.lorenz_incdist <-  function(x, add = FALSE, lor.type = "ord",
 plot.tip <-
   function(x, add = FALSE,
            xlab = FALSE, ylab = FALSE,
-           xlim = FALSE, ylim = FALSE, type = FALSE, ...)
-{
+           xlim = FALSE, ylim = FALSE, type = FALSE, ...) {
             object <- x
             if(!is.tip(object)) stop("Not a tip curve!")
     ## use the as.data.frame
@@ -338,8 +334,7 @@ plot.tip <-
 
 #' @export lines.tip
 #' @export
-lines.tip <- function(x, ...)
-{
+lines.tip <- function(x, ...) {
     plot.tip(x, add = TRUE, ...)
   }
 
@@ -352,8 +347,7 @@ plot.tip_list <-  function(x, add = FALSE,
                        xlab = FALSE, ylab = FALSE,
                        xlim = FALSE, ylim = FALSE,
                        type = "l", legend = TRUE,
-                        ...)
-{
+                        ...) {
     object <- x
     if(!is.list(object))
       stop("Object is not a list!")
@@ -384,8 +378,7 @@ plot.tip_incdist <-  function(x, add = FALSE, lor.type = "ord",
                           type = "l",
                           col = FALSE,
                           legend = TRUE,
-                          ...)
-{
+                          ...) {
     object <- x
     if(!inherits(object, "tip_incdist")) stop("Not an incdist summary object!")
     td <- as.data.frame(object)
